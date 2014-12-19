@@ -4,5 +4,6 @@
     <string name="app_name">Unofficial Hendrix App</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="rss_url">https://hendrix.edu/news/RssFeed.ashx?fol=235</string>
 
 </resources>
