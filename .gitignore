@@ -2,7 +2,8 @@ lt application files
 *.apk
 *.ap_
 
-# files for the dex VM
+
+# Files for the Dalvik VM
 *.dex
 
 # Java class files
@@ -16,7 +17,7 @@ lt application files
 bin/
 gen/
 
-# Ignore gradle files
+# Gradle files
 .gradle/
 build/
 
@@ -43,3 +44,6 @@ Thumbs.db
 
 # Miscellaneous
 *.swp
+
+# Log Files
+*.log
