@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.ryan.unofficialhendrixapp.activities.NewsDetailActivity"
+    android:orientation="vertical">
+
+    <TextView android:text="Title" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/newsDetailTitleView" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/newsDetailScrollView"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/newsDetailDescriptionView" />
+    </ScrollView>
+
+</LinearLayout>

@@ -7,12 +7,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Title"
-        android:id="@+id/newsView" />
+        android:id="@+id/newsView"
+        android:textSize="22sp"
+        android:textColor="@color/primary_material_dark" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
         android:id="@+id/dateView"
-        android:paddingLeft="16dp" />
+        android:textColor="@color/primary_material_light"
+        android:textSize="14sp" />
+
 </LinearLayout>

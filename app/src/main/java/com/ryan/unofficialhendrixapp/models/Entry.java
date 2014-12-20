@@ -1,11 +1,9 @@
 package com.ryan.unofficialhendrixapp.models;
 
-import java.util.ArrayList;
-
 /**
  * Created by ryan on 12/18/14.
  */
-public class Entry extends ArrayList {
+public class Entry {
 
     private String title;
     private String link;
@@ -13,17 +11,10 @@ public class Entry extends ArrayList {
     private String date;
 
     public Entry(String title, String link, String description, String date) {
-        setTitle(title);
-        setLink(link);
-        setDescription(description);
-        setDate(date);
-    }
-
-    public Entry() {
-        setTitle(null);
-        setLink(null);
-        setDescription(null);
-        setDate(null);
+        this.title = title;
+        this.link = link;
+        this.description = description;
+        this.date = date;
     }
 
     public String getTitle() {
@@ -40,21 +31,5 @@ public class Entry extends ArrayList {
 
     public String getDate() {
         return date;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

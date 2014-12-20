@@ -77,14 +77,12 @@ public class FetchNews extends AsyncTask< ArrayList<Entry>, Void, ArrayList<Entr
                 }
                 String name = parser.getName();
                 if (name.equals("item")) {
-                    entryList.add( getEntry(parser) );
-                } /*else {
-                    skip(parser);
-                } */
+                    entryList.add(getEntry(parser));
+                }
             }
 
         } catch ( IOException|XmlPullParserException e ) {
-            e.printStackTrace();
+            Log.v(LOG_TAG, "RSS link stopped working");
             return new ArrayList<Entry>();
         } finally {
             Utility.closeInputStream( inputStream );
@@ -105,19 +103,18 @@ public class FetchNews extends AsyncTask< ArrayList<Entry>, Void, ArrayList<Entr
             }
             String name = parser.getName();
             if (name.equals("title")) {
-                Log.v(LOG_TAG, "Inside the name.equals(title)");
                 title = readCategory(parser, "title");
-            } else if (name.equals("description")) {
-                link = readCategory(parser, "description");
             } else if (name.equals("link")) {
-                description = readCategory(parser, "link");
+                link = readCategory(parser, "link");
+            } else if (name.equals("description")) {
+                description = readCategory(parser, "description");
             } else if (name.equals("pubDate")) {
                 date = readCategory(parser, "pubDate");
             } else {
                 skip(parser);
             }
         }
-        return new Entry(title, link, description, date);
+        return new Entry(title, link, description, date.substring(0, 16));
     }
 
     // Processes title tags in the feed.

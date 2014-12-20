@@ -1,5 +1,7 @@
 package com.ryan.unofficialhendrixapp.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.FetchNews;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.adapters.NewsAdapter;
+import com.ryan.unofficialhendrixapp.models.Entry;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -28,7 +31,9 @@ public class MainActivity extends ActionBarActivity {
         mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() { // TODO: Add listener for listViewNews
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                String link = ((Entry) parent.getAdapter().getItem(position)).getLink();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(intent);
             }
         });
     }
