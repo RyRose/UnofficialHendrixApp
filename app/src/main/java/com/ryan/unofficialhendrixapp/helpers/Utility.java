@@ -3,8 +3,11 @@ package com.ryan.unofficialhendrixapp.helpers;
 import android.content.Context;
 import android.net.ConnectivityManager;
 
+import com.ryan.unofficialhendrixapp.R;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by ryan on 12/18/14.
@@ -26,6 +29,19 @@ public class Utility {
             e.printStackTrace();
         }
 
+    }
+
+    public static InputStream getRSSStream(Context context) {
+        URL url;
+        InputStream inputStream;
+        try {
+            url = new URL(context.getResources().getString(R.string.rss_url));
+            inputStream = url.openStream();
+        } catch (IOException e) {
+            inputStream = null;
+            e.printStackTrace();
+        }
+        return inputStream;
     }
 
 }

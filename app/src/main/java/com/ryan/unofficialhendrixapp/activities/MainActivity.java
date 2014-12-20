@@ -4,18 +4,34 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import com.ryan.unofficialhendrixapp.FetchNews;
 import com.ryan.unofficialhendrixapp.R;
-
+import com.ryan.unofficialhendrixapp.adapters.NewsAdapter;
 
 public class MainActivity extends ActionBarActivity {
+
+    ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        NewsAdapter newsAdapter = new NewsAdapter(this, R.id.list_item);
+        new FetchNews (this, newsAdapter).execute();
+        mListView = (ListView) findViewById(R.id.listViewNews);
+        mListView.setAdapter( newsAdapter );
+        mListView.setOnItemClickListener( new AdapterView.OnItemClickListener() { // TODO: Add listener for listViewNews
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

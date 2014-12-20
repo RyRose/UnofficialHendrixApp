@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp;
+package com.ryan.unofficialhendrixapp.models;
 
 import java.util.ArrayList;
 
