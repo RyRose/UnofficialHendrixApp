@@ -14,7 +14,12 @@ import com.ryan.unofficialhendrixapp.R;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-// import de.l3s.boilerpipe.BoilerpipeProcessingException;
+/**
+ * TODO Implement article extraction
+ *
+ * Displays the article linked to in each item of the listViewNews
+ *
+ */
 
 public class NewsDetailActivity extends ActionBarActivity {
 
@@ -57,6 +62,12 @@ public class NewsDetailActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Extracts the article from the web page linked in each NewsItem
+     *
+     * TODO Implement extraction or get rid of the entire activity
+     */
 
     private class FetchArticle extends AsyncTask<String, String, String> {
 

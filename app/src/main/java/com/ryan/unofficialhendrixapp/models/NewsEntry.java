@@ -1,16 +1,18 @@
 package com.ryan.unofficialhendrixapp.models;
 
 /**
- * Created by ryan on 12/18/14.
+ *
+ * Data model used to hold each entry of the listViewNews
+ *
  */
-public class Entry {
+public class NewsEntry {
 
     private String title;
     private String link;
     private String description;
     private String date;
 
-    public Entry(String title, String link, String description, String date) {
+    public NewsEntry(String title, String link, String description, String date) {
         this.title = title;
         this.link = link;
         this.description = description;
