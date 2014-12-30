@@ -1,5 +1,17 @@
 apply plugin: 'com.android.application'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.1.0'
+    }
+}
+
+apply plugin: 'hugo'
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -19,6 +31,10 @@ android {
     }
 }
 
+
 dependencies {
     compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.jakewharton:butterknife:6.0.0'
+    compile 'com.github.frankiesardo:icepick:2.3.6'
+    provided 'com.github.frankiesardo:icepick-processor:2.3.6'
 }
