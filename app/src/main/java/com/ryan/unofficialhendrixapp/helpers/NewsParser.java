@@ -13,22 +13,20 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by ryan on 12/29/14.
- */
 public class NewsParser {
 
     private final String LOG_TAG = getClass().getSimpleName();
-    Context mContext;
+    private Context mContext;
 
     public NewsParser( Context context) {
         mContext = context;
     }
 
     public ArrayList<NewsEntry> parse() {
-        InputStream inputStream = Utility.getRSSStream(mContext);
+        InputStream inputStream = getRSSStream();
         XmlPullParser parser;
         ArrayList<NewsEntry> newsEntryList = new ArrayList<NewsEntry>();
 
@@ -36,24 +34,24 @@ public class NewsParser {
             parser = Xml.newPullParser();
             parser.setInput(inputStream, null);
             parser.nextTag();
-            parser.require( XmlPullParser.START_TAG, null, "rss");
+            parser.require( XmlPullParser.START_TAG, null, mContext.getResources().getStringArray(R.array.rss_keys)[0]);
 
             while (parser.next() != XmlPullParser.END_DOCUMENT) {
                 if (parser.getEventType() != XmlPullParser.START_TAG) {
                     continue;
                 }
                 String name = parser.getName();
-                if (name.equals("item")) {
+                if (name.equals( mContext.getResources().getStringArray(R.array.rss_keys)[2] )) {
                     newsEntryList.add(getEntry(parser));
                 }
             }
 
             ( (Activity) mContext ).getPreferences(0)
-                    .edit().putBoolean( mContext.getResources().getString(R.string.db_filled), true)
+                    .edit().putBoolean( mContext.getResources().getString(R.string.db_filled_key), true)
                     .commit();
 
         } catch ( IOException | XmlPullParserException e ) {
-            Log.v(LOG_TAG, "RSS link stopped working");
+            Log.v(LOG_TAG, "RSS link stopped working: " + e.getMessage());
             return new ArrayList<NewsEntry>();
         } finally {
             Utility.closeInputStream( inputStream );
@@ -63,29 +61,31 @@ public class NewsParser {
     }
 
     private NewsEntry getEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, null, "item");
-        String title = null;
-        String link = null;
-        String description = null;
-        String date = null;
+        String item_key = mContext.getResources().getStringArray(R.array.rss_keys)[2];
+        String title_key = mContext.getResources().getStringArray(R.array.rss_keys)[3];
+        String link_key = mContext.getResources().getStringArray(R.array.rss_keys)[4];
+        String description_key = mContext.getResources().getStringArray(R.array.rss_keys)[5];
+        String pubDate_key = mContext.getResources().getStringArray(R.array.rss_keys)[6];
         String name;
+        String title = "";
+        String link = "";
+        String description = "";
+        String date = "";
+
+        parser.require(XmlPullParser.START_TAG, null, item_key);
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
             name = parser.getName();
-            if (name.equals("title")) {
-                title = readCategory(parser, "title");
-            } else if (name.equals("link")) {
-                link = readCategory(parser, "link");
-            } else if (name.equals("description")) {
-                description = readCategory(parser, "description");
-            } else if (name.equals("pubDate")) {
-                date = readCategory(parser, "pubDate");
-            } else {
-                skip(parser);
-            }
+            if      ( name.equals(title_key))       title = readCategory(parser, title_key);
+            else if ( name.equals(link_key))        link = readCategory(parser, link_key);
+            else if ( name.equals(description_key)) description = readCategory(parser, description_key);
+            else if ( name.equals(pubDate_key))     date = readCategory(parser, pubDate_key);
+            else skip(parser);
+
         }
         return new NewsEntry(title, link, description, date.substring(0, 16));
     }
@@ -119,5 +119,18 @@ public class NewsParser {
                     break;
             }
         }
+    }
+
+    private InputStream getRSSStream() {
+        URL url;
+        InputStream inputStream;
+        try {
+            url = new URL(mContext.getResources().getString(R.string.rss_url));
+            inputStream = url.openStream();
+        } catch (IOException e) {
+            inputStream = null;
+            Log.v(LOG_TAG, "Site not available or RSS link down: " + e.getMessage());
+        }
+        return inputStream;
     }
 }

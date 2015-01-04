@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Unofficial Hendrix App</string>
+    <string name="app_name">Unofficial Hendrix College</string>
     <string name="action_settings">Settings</string>
-    <string name="rss_url" translatable="no" >https://hendrix.edu/news/RssFeed.ashx?fol=235</string>
+    <string name="rss_url" translatable="false">https://hendrix.edu/news/RssFeed.ashx?fol=235</string>
     <string name="title_activity_news_detail">NewsDetailActivity</string>
-    <string name="title">Title</string>
-    <string name="db_filled" translatable="no" >isDbFilled</string>
+    <string name="db_filled_key" translatable="false">isDbFilled</string>
+    <string name="directory_filled_key" translatable="false">isDirFilled</string>
+
+    <string-array name="drawer_names">
+        <item>News</item>
+        <item>Staff Directory</item>
+    </string-array>
+
+    <string-array name="rss_keys" translatable="false">
+        <item>rss</item>
+        <item>channel</item>
+        <item>item</item>
+        <item>title</item>
+        <item>link</item>
+        <item>description</item>
+        <item>pubDate</item>
+    </string-array>
+
+    <string-array name="dir_keys" translatable="false">
+        <item>item</item>
+        <item>pic</item>
+        <item>name</item>
+        <item>title</item>
+        <item>department</item>
+        <item>phone</item>
+        <item>email</item>
+        <item>location_line1</item>
+        <item>location_line2</item>
+    </string-array>
+
+    <string name="drawer_open">Opened navigation drawer.</string>
+    <string name="drawer_close">Closed navigation drawer.</string>
+    <string name="fragment_pos_key">name_pos</string>
 
 </resources>

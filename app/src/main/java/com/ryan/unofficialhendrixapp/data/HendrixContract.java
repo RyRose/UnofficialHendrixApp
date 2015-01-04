@@ -1,5 +1,6 @@
 package com.ryan.unofficialhendrixapp.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,7 +8,16 @@ import android.provider.BaseColumns;
  */
 public class HendrixContract {
 
+    public static final String CONTENT_AUTHORITY = "com.ryan.unofficialhendrixapp.provider";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public static final String PATH_NEWS = "news";
+    public static final String PATH_STAFF = "staff";
+
     public static final class NewsColumn implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_NEWS).build();
 
         public static final String TABLE_NAME = "news";
         public static final String COLUMN_TITLE = "title";
@@ -18,6 +28,9 @@ public class HendrixContract {
     }
 
     public static final class StaffColumn implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_STAFF).build();
 
         public static final String TABLE_NAME = "staff";
         public static final String COLUMN_NAME = "name";

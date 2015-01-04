@@ -1,8 +1,11 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
+import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,11 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
@@ -28,17 +28,8 @@ import com.ryan.unofficialhendrixapp.models.NewsEntry;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
-/**
- * Created by ryan on 12/28/14.
- */
-
-public class NewsFragment extends Fragment {
-
-    @InjectView(R.id.listViewNews) ListView mListView;
-    NewsAdapter mNewsAdapter;
+public class NewsFragment extends ListFragment implements LoaderManager.LoaderCallbacks{
+    private final String LOG_TAG = getClass().getSimpleName();
 
     private static final String[] NEWS_COLUMNS = {
         NewsColumn._ID,
@@ -54,39 +45,54 @@ public class NewsFragment extends Fragment {
     public static final int COL_NEWS_DATE = 3;
     public static final int COL_NEWS_LINK = 4;
 
+    public static NewsFragment newInstance(int pos, Context context) {
+        Bundle bundle = new Bundle();
+        bundle.putInt( context.getResources().getString(R.string.fragment_pos_key), pos);
+        NewsFragment fragment = new NewsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HendrixDbHelper hendrixDbHelper = new HendrixDbHelper(getActivity());
-        mNewsAdapter = new NewsAdapter(getActivity(), null, 0);
-        new FetchNews(getActivity(), hendrixDbHelper, mNewsAdapter).execute();
+        setRetainInstance(true);
+        NewsAdapter adapter = new NewsAdapter(getActivity(), null, 0);
+        new FetchNews(getActivity(), new HendrixDbHelper(getActivity()), adapter).execute();
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news, null);
-        ButterKnife.inject(this, rootView);
-
-        mListView.setAdapter(mNewsAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor c = ( (NewsAdapter) parent.getAdapter() ).getCursor();
-                c.moveToPosition( position );
-                String link = c.getString( NewsFragment.COL_NEWS_LINK );
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                startActivity(intent);
-            }
-        });
-        return rootView;
+        setListAdapter(adapter);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setRetainInstance(true);
+        Bundle args = getArguments();
+        int name_pos = args.getInt(getResources().getString(R.string.fragment_pos_key));
+        getActivity().setTitle(getResources().getStringArray(R.array.drawer_names)[ name_pos ]);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Cursor c = ( (CursorAdapter) getListAdapter()) .getCursor();
+        c.moveToPosition(position);
+        String link = c.getString(NewsFragment.COL_NEWS_LINK);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        startActivity(intent);
+    }
+
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
     }
 
     /**
@@ -140,6 +146,7 @@ public class NewsFragment extends Fragment {
                 row.put( NewsColumn.COLUMN_LINK, entry.getLink());
                 database.insert( NewsColumn.TABLE_NAME, null, row);
             }
+            database.close();
             database = dbHelper.getReadableDatabase();
 
             return database.query(NewsColumn.TABLE_NAME, NEWS_COLUMNS, null, null, null, null, null);
@@ -150,11 +157,12 @@ public class NewsFragment extends Fragment {
             super.onPostExecute(c);
             mNewsAdapter.changeCursor(c);
             mNewsAdapter.notifyDataSetChanged();
+            mContext = null;
         }
 
         private boolean isDatabaseFilled() {
             SharedPreferences sharedPreferences = getActivity().getPreferences( Preference.DEFAULT_ORDER );
-            String dbFilled = getResources().getString(R.string.db_filled);
+            String dbFilled = getResources().getString(R.string.db_filled_key);
             return sharedPreferences.getBoolean(dbFilled, false);
         }
 

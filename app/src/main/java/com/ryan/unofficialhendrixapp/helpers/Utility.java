@@ -2,17 +2,14 @@ package com.ryan.unofficialhendrixapp.helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-
-import com.ryan.unofficialhendrixapp.R;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
-/**
- * Created by ryan on 12/18/14.
- */
+
 public class Utility {
+    private static final String LOG_TAG = "Utility";
 
     public static boolean isOnline( Context context ) {
         ConnectivityManager cm =
@@ -26,22 +23,9 @@ public class Utility {
         try {
             inputStream.close();
         } catch ( IOException e ) {
-            e.printStackTrace();
+            Log.v(LOG_TAG, "Input Stream could not be closed: " + e.getMessage());
         }
 
-    }
-
-    public static InputStream getRSSStream(Context context) {
-        URL url;
-        InputStream inputStream;
-        try {
-            url = new URL(context.getResources().getString(R.string.rss_url));
-            inputStream = url.openStream();
-        } catch (IOException e) {
-            inputStream = null;
-            e.printStackTrace();
-        }
-        return inputStream;
     }
 
 }
