@@ -1,6 +1,5 @@
 package com.ryan.unofficialhendrixapp.helpers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
@@ -26,9 +25,13 @@ public class NewsParser {
     }
 
     public ArrayList<NewsEntry> parse() {
-        InputStream inputStream = getRSSStream();
+        InputStream inputStream;
         XmlPullParser parser;
         ArrayList<NewsEntry> newsEntryList = new ArrayList<NewsEntry>();
+
+        if ( (inputStream = getRSSStream()) == null) {
+            return newsEntryList;
+        }
 
         try {
             parser = Xml.newPullParser();
@@ -45,10 +48,6 @@ public class NewsParser {
                     newsEntryList.add(getEntry(parser));
                 }
             }
-
-            ( (Activity) mContext ).getPreferences(0)
-                    .edit().putBoolean( mContext.getResources().getString(R.string.db_filled_key), true)
-                    .commit();
 
         } catch ( IOException | XmlPullParserException e ) {
             Log.v(LOG_TAG, "RSS link stopped working: " + e.getMessage());

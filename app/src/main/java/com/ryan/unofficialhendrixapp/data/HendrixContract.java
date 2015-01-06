@@ -3,9 +3,6 @@ package com.ryan.unofficialhendrixapp.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by ryan on 12/27/14.
- */
 public class HendrixContract {
 
     public static final String CONTENT_AUTHORITY = "com.ryan.unofficialhendrixapp.provider";
@@ -13,6 +10,8 @@ public class HendrixContract {
 
     public static final String PATH_NEWS = "news";
     public static final String PATH_STAFF = "staff";
+
+    public static final String DISTINCT = "dist";
 
     public static final class NewsColumn implements BaseColumns {
 
@@ -31,6 +30,9 @@ public class HendrixContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_STAFF).build();
+
+        public static final Uri CONTENT_URI_WITH_DISTINCT = CONTENT_URI.buildUpon()
+                .appendPath(DISTINCT).build();
 
         public static final String TABLE_NAME = "staff";
         public static final String COLUMN_NAME = "name";

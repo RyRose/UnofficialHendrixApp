@@ -28,6 +28,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ryan.unofficialhendrixapp.activities.MainActivity" />
         </activity>
+        <activity android:name=".activities.DirectoryDetailActivity"
+            android:parentActivityName=".activities.MainActivity" >
+        </activity>
+        <provider
+            android:authorities="com.ryan.unofficialhendrixapp.provider"
+            android:name=".data.HendrixProvider"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>

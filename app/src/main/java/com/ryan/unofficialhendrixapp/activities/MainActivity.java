@@ -14,8 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.directory.DepartmentFragment;
 import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
+import com.ryan.unofficialhendrixapp.fragments.directory.DepartmentFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
         ButterKnife.inject(this);
         mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
 
-        mDrawerView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, R.id.drawer_item, getResources().getStringArray(R.array.drawer_names)));
+        mDrawerView.setAdapter(new ArrayAdapter<String>(this, R.layout.activity_main_drawer_list_item, R.id.drawer_item, getResources().getStringArray(R.array.drawer_names)));
         mDrawerView.setOnItemClickListener( new DrawerItemClickListener() );
 
         mDrawerLayout.setDrawerListener(mActionBarToggle);
@@ -41,10 +41,10 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if ( savedInstanceState == null) {
-            mDrawerView.setItemChecked(0, true);
+        if ( savedInstanceState == null ) {
+            mDrawerView.setItemChecked(1, true);
             getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_main_container, NewsFragment.newInstance(0, getApplicationContext()))
+                    .replace(R.id.fragment_main_container, DepartmentFragment.newInstance(1, getApplicationContext()))
                     .commit();
         }
 

@@ -4,7 +4,6 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -18,6 +17,7 @@ public class HendrixProvider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_NEWS, 1);
         sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF, 2);
+        sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF + "/" + HendrixContract.DISTINCT, 3);
     }
 
     @Override
@@ -28,17 +28,30 @@ public class HendrixProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        String table_name;
+        boolean distinct = false;
+        String table;
+        String groupBy = null;
+        String having = null;
+        String limit = null;
+
         SQLiteDatabase db;
         Cursor c;
 
-        if ( ( table_name = getTableName(uri) ) == null) {
-            return new CursorWrapper(null);
+        switch ( sUriMatcher.match(uri) ) {
+            case 1:
+                table = HendrixContract.NewsColumn.TABLE_NAME;
+                break;
+            case 3:
+                groupBy = HendrixContract.StaffColumn.COLUMN_DEPARTMENT;
+            case 2:
+                table = HendrixContract.StaffColumn.TABLE_NAME;
+                break;
+            default:
+                throw new IllegalArgumentException("URI not valid");
         }
 
         db = mDbHelper.getReadableDatabase();
-        c = db.query(table_name, projection, selection, selectionArgs, null, null, null);
-        db.close();
+        c = db.query(distinct, table, projection, selection, selectionArgs, groupBy, having, sortOrder, limit);
         return c;
     }
 
@@ -58,7 +71,6 @@ public class HendrixProvider extends ContentProvider {
 
         db = mDbHelper.getWritableDatabase();
         db.insert(table_name, null, values);
-        db.close();
         return null;
     }
 
@@ -72,13 +84,16 @@ public class HendrixProvider extends ContentProvider {
         }
         db = mDbHelper.getWritableDatabase();
         db.delete(table_name, selection, selectionArgs);
-        db.close();
         return 1;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        String table_name;
+        if ( ( table_name = getTableName(uri) ) == null) {
+            return 0;
+        }
+        return 1;
     }
 
     private String getTableName ( Uri uri ) {
