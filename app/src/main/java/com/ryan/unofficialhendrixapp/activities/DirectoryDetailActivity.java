@@ -10,12 +10,12 @@ import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.directory.PersonDetailFragment;
 import com.ryan.unofficialhendrixapp.fragments.directory.PersonGridFragment;
 
-public class DirectoryDetailActivity extends ActionBarActivity {
+public class DirectoryDetailActivity extends ActionBarActivity implements PersonGridFragment.OnPersonSelectedListener{
     private final String LOG_TAG = getClass().getSimpleName();
 
     public static final String DEPT_KEY = "dept_key";
     public static final String LETTER_KEY = "ltr_key";
-    public static final String NAME_KEY = "name_key";
+    public static final String ID_KEY = "ID_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +33,17 @@ public class DirectoryDetailActivity extends ActionBarActivity {
                 fragment = PersonGridFragment.newInstance(null, letter);
 
             } else {
-                String name = getIntent().getStringExtra(NAME_KEY);
-                fragment = PersonDetailFragment.newInstance(name);
+                int id = getIntent().getIntExtra(ID_KEY, 0);
+                fragment = PersonDetailFragment.newInstance(id);
             }
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_directory_detail_container, fragment)
+                    .add(R.id.fragment_directory_detail_container, fragment)
                     .commit();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,5 +60,14 @@ public class DirectoryDetailActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPersonSelected(int id) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_directory_detail_container,
+                         PersonDetailFragment.newInstance(id))
+                .addToBackStack(null)
+                .commit();
     }
 }

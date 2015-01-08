@@ -24,14 +24,19 @@ import com.ryan.unofficialhendrixapp.models.Person;
 
 import java.util.ArrayList;
 
+import icepick.Icicle;
+
 public class DepartmentFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private final String LOG_TAG = getClass().getSimpleName();
+
+    @Icicle int mPosition;
 
     private static final String[] DEPARTMENT_COLUMNS = {
             HendrixContract.StaffColumn._ID,
             HendrixContract.StaffColumn.COLUMN_DEPARTMENT,
     };
 
+    private final String POS_KEY = "dep_key";
     public static final int COL_DEPARTMENT_ID = 0;
     public static final int COL_DEPARTMENT_DEPT = 1;
 
@@ -39,7 +44,6 @@ public class DepartmentFragment extends ListFragment implements LoaderManager.Lo
         Bundle bundle = new Bundle();
         bundle.putInt( context.getResources().getString(R.string.fragment_pos_key), pos);
         DepartmentFragment fragment = new DepartmentFragment();
-        fragment.setRetainInstance(true);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -47,6 +51,11 @@ public class DepartmentFragment extends ListFragment implements LoaderManager.Lo
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.getInt(POS_KEY, 0) != 0) {
+            mPosition = savedInstanceState.getInt(POS_KEY, 0);
+        } else {
+            mPosition = getActivity().getPreferences(Context.MODE_PRIVATE).getInt(POS_KEY, 0);
+        }
         DepartmentAdapter adapter = new DepartmentAdapter(getActivity(), null, DepartmentAdapter.NO_SELECTION);
         new FillStaffTable(this).execute(DEPARTMENT_COLUMNS);
 
@@ -62,14 +71,33 @@ public class DepartmentFragment extends ListFragment implements LoaderManager.Lo
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getListView().smoothScrollToPosition(mPosition);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putInt(POS_KEY, mPosition);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POS_KEY, mPosition);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Cursor c = ( (DepartmentAdapter) getListAdapter()).getCursor();
         c.moveToPosition(position);
         String dept = c.getString(COL_DEPARTMENT_DEPT);
+        mPosition = getListView().getFirstVisiblePosition();
         Intent intent = new Intent(getActivity(), DirectoryDetailActivity.class);
         intent.putExtra(DirectoryDetailActivity.DEPT_KEY, dept);
-        startActivity(intent);
+        getActivity().startActivity(intent);
     }
 
     @Override
@@ -87,6 +115,7 @@ public class DepartmentFragment extends ListFragment implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         ( (CursorAdapter) getListAdapter() ).swapCursor(data);
+        //getListView().smoothScrollToPosition(mPosition);
     }
 
     @Override

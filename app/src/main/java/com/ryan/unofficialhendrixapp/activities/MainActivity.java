@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
         if ( savedInstanceState == null ) {
             mDrawerView.setItemChecked(1, true);
             getFragmentManager().beginTransaction()
+                    .addToBackStack(null)
                     .replace(R.id.fragment_main_container, DepartmentFragment.newInstance(1, getApplicationContext()))
                     .commit();
         }

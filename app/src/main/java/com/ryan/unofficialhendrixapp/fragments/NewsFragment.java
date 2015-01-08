@@ -1,7 +1,6 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,11 +12,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
@@ -29,9 +31,16 @@ import com.ryan.unofficialhendrixapp.models.NewsEntry;
 
 import java.util.ArrayList;
 
-public class NewsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnItemClick;
+
+public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = getClass().getSimpleName();
 
+    @InjectView(R.id.fragment_news_listView) ListView mListView;
+    @InjectView(R.id.fragment_news_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    NewsAdapter mNewsAdapter;
     private static final String[] NEWS_COLUMNS = {
         NewsColumn._ID,
         NewsColumn.COLUMN_TITLE,
@@ -57,12 +66,25 @@ public class NewsFragment extends ListFragment implements LoaderManager.LoaderCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NewsAdapter adapter = new NewsAdapter(getActivity(), null, 0);
         new FillNews(this).execute(false);
-
+        mNewsAdapter = new NewsAdapter(getActivity(), null, NewsAdapter.NO_SELECTION);
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        setListAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        ButterKnife.inject(this, rootView);
+
+        mListView.setAdapter(mNewsAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        return rootView;
     }
 
     @Override
@@ -85,8 +107,7 @@ public class NewsFragment extends ListFragment implements LoaderManager.LoaderCa
         int id = item.getItemId();
         switch(id) {
             case R.id.action_refresh:
-                new FillNews(this).execute(true);
-                getLoaderManager().getLoader(0).reset();
+                refresh();
                 break;
             default:
                 return false;
@@ -94,9 +115,15 @@ public class NewsFragment extends ListFragment implements LoaderManager.LoaderCa
         return true;
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Cursor c = ( (CursorAdapter) getListAdapter()) .getCursor();
+    public void refresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        new FillNews(this).execute(true);
+        getLoaderManager().getLoader(0).reset();
+    }
+
+    @OnItemClick(R.id.fragment_news_listView)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor c = mNewsAdapter.getCursor();
         c.moveToPosition(position);
         String link = c.getString(NewsFragment.COL_NEWS_LINK);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
@@ -117,13 +144,13 @@ public class NewsFragment extends ListFragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        ( (NewsAdapter) getListAdapter() ).changeCursor(data);
+        mNewsAdapter.changeCursor(data);
 
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-        ( (NewsAdapter) getListAdapter() ).changeCursor(null);
+        mNewsAdapter.changeCursor(null);
     }
 
     /**
@@ -158,6 +185,7 @@ public class NewsFragment extends ListFragment implements LoaderManager.LoaderCa
             if (bool) {
                 getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
             }
+            mSwipeRefreshLayout.setRefreshing(false);
             mFragment = null;
         }
 

@@ -3,8 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/directory_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/directory_grid" />
+        android:columnWidth="103dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:padding="2dp"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"/>
 </LinearLayout>

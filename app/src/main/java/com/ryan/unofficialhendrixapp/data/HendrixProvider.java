@@ -30,9 +30,9 @@ public class HendrixProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         boolean distinct = false;
         String table;
-        String groupBy = null;
-        String having = null;
-        String limit = null;
+        String groupBy = "";
+        String having = "";
+        String limit = "";
 
         SQLiteDatabase db;
         Cursor c;
@@ -41,9 +41,12 @@ public class HendrixProvider extends ContentProvider {
             case 1:
                 table = HendrixContract.NewsColumn.TABLE_NAME;
                 break;
+            case 2:
+                table = HendrixContract.StaffColumn.TABLE_NAME;
+                groupBy = HendrixContract.StaffColumn.COLUMN_NAME;
+                break;
             case 3:
                 groupBy = HendrixContract.StaffColumn.COLUMN_DEPARTMENT;
-            case 2:
                 table = HendrixContract.StaffColumn.TABLE_NAME;
                 break;
             default:
