@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.directory.PersonGridFragment;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -31,11 +32,26 @@ public class DirectoryGridAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
+    public void bindView(View view, final Context context, Cursor cursor) {
+        final ViewHolder holder = (ViewHolder) view.getTag();
         holder.textView.setText(cursor.getString(PersonGridFragment.COL_GRID_NAME));
+
         Picasso.with(context).load(cursor.getString(PersonGridFragment.COL_GRID_PIC))
-                .fit().centerCrop().into(holder.imageView);
+                .fit().centerCrop().into(holder.imageView, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                Picasso.with(context)
+                        .load(R.drawable.placeholder_person)
+                        .fit()
+                        .centerCrop()
+                        .into(holder.imageView);
+            }
+        });
     }
 
     class ViewHolder {

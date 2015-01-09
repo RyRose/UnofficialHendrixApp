@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.activities.DirectoryDetailActivity;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -93,7 +94,21 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
                 .load( data.getString(COL_PERSON_PICTURE))
                 .fit()
                 .centerCrop()
-                .into(mImageView);
+                .into(mImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(getActivity())
+                                .load( R.drawable.placeholder_person)
+                                .fit()
+                                .centerInside()
+                                .into(mImageView);
+                    }
+                });
 
         for ( int i = 0; i < mPersonViews.length; i++ ) {
             mPersonViews[i].setText( data.getString(i) );

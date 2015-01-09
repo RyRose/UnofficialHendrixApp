@@ -118,7 +118,6 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     public void refresh() {
         mSwipeRefreshLayout.setRefreshing(true);
         new FillNews(this).execute(true);
-        getLoaderManager().getLoader(0).reset();
     }
 
     @OnItemClick(R.id.fragment_news_listView)
@@ -145,7 +144,6 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mNewsAdapter.changeCursor(data);
-
     }
 
     @Override
@@ -182,9 +180,7 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
         @Override
         protected void onPostExecute(Boolean bool) {
             super.onPostExecute(bool);
-            if (bool) {
-                getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
-            }
+            getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
             mSwipeRefreshLayout.setRefreshing(false);
             mFragment = null;
         }
