@@ -25,7 +25,7 @@ public class DirectoryGridAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.fragment_directory_grid_item, parent, false);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.fragment_dir_grid_item, parent, false);
         ViewHolder holder = new ViewHolder(rootView);
         rootView.setTag(holder);
         return rootView;

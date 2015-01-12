@@ -21,7 +21,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/person_textView6"
         android:layout_below="@+id/person_textView7"
         android:layout_alignLeft="@+id/person_ImageView"
@@ -31,7 +30,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/person_textView7"
         android:layout_below="@+id/person_textView2"
         android:layout_alignLeft="@+id/person_ImageView"
@@ -41,7 +39,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
         android:id="@+id/person_textView1"
         android:layout_below="@+id/person_ImageView"
         android:layout_alignLeft="@+id/person_ImageView"
@@ -52,7 +49,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/person_textView2"
         android:textSize="20sp"
         android:layout_below="@+id/person_textView1"
@@ -62,7 +58,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/person_textView5"
         android:autoLink="phone"
         android:textSize="20sp"
@@ -73,7 +68,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/person_textView4"
         android:autoLink="email"
         android:textSize="20sp"

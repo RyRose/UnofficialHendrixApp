@@ -8,8 +8,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id ="@+id/fragment_main_container" >
-    </FrameLayout>
+        android:id ="@+id/fragment_main_container"
+        />
 
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
@@ -18,7 +18,8 @@
         android:choiceMode="singleChoice"
         android:divider="@color/very_light_grey"
         android:dividerHeight="1dp"
-        android:background="@color/white"/>
+        android:background="@color/white"
+        />
 
 
 </android.support.v4.widget.DrawerLayout>

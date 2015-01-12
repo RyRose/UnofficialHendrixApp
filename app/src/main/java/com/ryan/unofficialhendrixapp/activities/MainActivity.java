@@ -1,8 +1,8 @@
 package com.ryan.unofficialhendrixapp.activities;
 
-import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
-import com.ryan.unofficialhendrixapp.fragments.directory.DepartmentFragment;
+import com.ryan.unofficialhendrixapp.fragments.TabbedDirectoryFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,10 +42,9 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         if ( savedInstanceState == null ) {
-            mDrawerView.setItemChecked(1, true);
-            getFragmentManager().beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.fragment_main_container, DepartmentFragment.newInstance(1, getApplicationContext()))
+            mDrawerView.setItemChecked(0, true);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_main_container, NewsFragment.newInstance(0, getApplicationContext()))
                     .commit();
         }
 
@@ -72,7 +71,6 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -87,7 +85,6 @@ public class MainActivity extends ActionBarActivity {
         mActionBarToggle.syncState();
     }
 
-
     private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
@@ -98,21 +95,19 @@ public class MainActivity extends ActionBarActivity {
                     fragment = NewsFragment.newInstance(position, getApplicationContext());
                     break;
                 case 1:
-                    fragment = DepartmentFragment.newInstance(position, getApplicationContext());
+                    fragment = TabbedDirectoryFragment.newInstance(position, getApplicationContext());
                     break;
                 default:
                     fragment = NewsFragment.newInstance(position, getApplicationContext());
                     break;
             }
 
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_main_container, fragment)
                     .commit();
 
             mDrawerView.setItemChecked(position, true);
-            setTitle( getResources().getStringArray(R.array.drawer_names)[position] );
             mDrawerLayout.closeDrawer(mDrawerView);
         }
     }
-
 }

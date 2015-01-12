@@ -77,7 +77,7 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_directory_grid, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_dir_grid, container, false);
         ButterKnife.inject(this, rootView);
         mGridView.setAdapter(mAdapter);
         return rootView;
@@ -86,9 +86,14 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mDept = getArguments().getString(DirectoryDetailActivity.DEPT_KEY, null);
-        mLetter = getArguments().getString(DirectoryDetailActivity.LETTER_KEY, null);
-        getActivity().setTitle( (mDept == null) ? mLetter : mDept );
+        if (getArguments().containsKey(DirectoryDetailActivity.DEPT_KEY)) {
+            mDept = getArguments().getString(DirectoryDetailActivity.DEPT_KEY);
+            mLetter = null;
+        } else {
+            mDept = null;
+            mLetter = getArguments().getString(DirectoryDetailActivity.LETTER_KEY);
+        }
+        getActivity().setTitle( (mDept != null) ? mDept : mLetter );
         if (mDept != null) {
             getLoaderManager().initLoader(DEPT_LOADER, null, this);
         } else {
@@ -111,16 +116,20 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String selection;
         String[] selectionArgs;
-        if (id == DEPT_LOADER) {
-            selection = HendrixContract.StaffColumn.COLUMN_DEPARTMENT
-                    + " == ?";
-            selectionArgs = new String[]{mDept};
-        } else if (id == LETTER_LOADER) {
-            selection = "substr(" + HendrixContract.StaffColumn.COLUMN_NAME +
-                    ", 1, 1) == ?";
-            selectionArgs = new String[]{mLetter};
-        } else {
-            return null;
+
+        switch( id ) {
+            case DEPT_LOADER:
+                selection = HendrixContract.StaffColumn.COLUMN_DEPARTMENT
+                        + " == ?";
+                selectionArgs = new String[]{mDept};
+                break;
+            case LETTER_LOADER:
+                selection = "substr(" + HendrixContract.StaffColumn.COLUMN_NAME +
+                        ", 1, 1) == ?";
+                selectionArgs = new String[]{mLetter};
+                break;
+            default:
+                return null;
         }
 
         return new CursorLoader(

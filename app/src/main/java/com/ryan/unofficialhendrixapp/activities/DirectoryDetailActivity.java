@@ -20,7 +20,7 @@ public class DirectoryDetailActivity extends ActionBarActivity implements Person
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_directory_detail);
+        setContentView(R.layout.activity_dir_detail);
 
         if ( savedInstanceState == null) {
             Fragment fragment;
@@ -66,7 +66,7 @@ public class DirectoryDetailActivity extends ActionBarActivity implements Person
     public void onPersonSelected(int id) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_directory_detail_container,
-                         PersonDetailFragment.newInstance(id))
+                        PersonDetailFragment.newInstance(id))
                 .addToBackStack(null)
                 .commit();
     }

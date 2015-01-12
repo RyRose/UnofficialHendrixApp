@@ -1,17 +1,17 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,13 +34,18 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
+import icepick.Icepick;
+import icepick.Icicle;
 
-public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks {
     private final String LOG_TAG = getClass().getSimpleName();
 
     @InjectView(R.id.fragment_news_listView) ListView mListView;
-    @InjectView(R.id.fragment_news_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.fragment_news_swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @Icicle int mPosition = 0;
     NewsAdapter mNewsAdapter;
+
     private static final String[] NEWS_COLUMNS = {
         NewsColumn._ID,
         NewsColumn.COLUMN_TITLE,
@@ -57,7 +62,7 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public static NewsFragment newInstance(int pos, Context context) {
         Bundle bundle = new Bundle();
-        bundle.putInt( context.getResources().getString(R.string.fragment_pos_key), pos);
+        bundle.putInt(context.getResources().getString(R.string.fragment_pos_key), pos);
         NewsFragment fragment = new NewsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -66,17 +71,16 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         new FillNews(this).execute(false);
-        mNewsAdapter = new NewsAdapter(getActivity(), null, NewsAdapter.NO_SELECTION);
+        mNewsAdapter = new NewsAdapter(getActivity(), null);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.inject(this, rootView);
-
         mListView.setAdapter(mNewsAdapter);
         mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -91,9 +95,21 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(0, null, this);
-        Bundle args = getArguments();
-        int name_pos = args.getInt(getResources().getString(R.string.fragment_pos_key));
+        mListView.setSelection(mPosition);
+        int name_pos = getArguments().getInt(getResources().getString(R.string.fragment_pos_key));
         getActivity().setTitle(getResources().getStringArray(R.array.drawer_names)[ name_pos ]);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPosition = mListView.getFirstVisiblePosition();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
@@ -130,7 +146,7 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
                 NewsColumn.CONTENT_URI,
@@ -142,12 +158,12 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mNewsAdapter.changeCursor(data);
+    public void onLoadFinished(android.support.v4.content.Loader loader, Object data) {
+        mNewsAdapter.changeCursor((Cursor) data);
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
+    public void onLoaderReset(android.support.v4.content.Loader loader) {
         mNewsAdapter.changeCursor(null);
     }
 
@@ -187,7 +203,7 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
 
         private boolean canFillNewsDb(boolean forceFill) {
             Cursor c = getActivity().getContentResolver()
-                    .query(NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null, null);
+                    .query(NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null);
             if (c == null) {
                 return Utility.isOnline(getActivity()) && forceFill;
             } else {

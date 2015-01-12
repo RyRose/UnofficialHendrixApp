@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.support.v4.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
@@ -16,13 +16,13 @@ import butterknife.InjectView;
 
 public class DepartmentAdapter extends CursorAdapter {
 
-    public DepartmentAdapter(Context context, Cursor c, int flags) { super(context, c, flags); }
+    public DepartmentAdapter(Context context, Cursor c) { super(context, c, false); }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view;
         view = LayoutInflater.from(context)
-                .inflate(R.layout.fragment_directory_department_item, parent, false);
+                .inflate(R.layout.fragment_dir_dept_item, parent, false);
         view.setTag( new ViewHolder(view));
         return view;
     }
@@ -30,7 +30,7 @@ public class DepartmentAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.view.setText( cursor.getString( DepartmentFragment.COL_DEPARTMENT_DEPT ) );
+        holder.view.setText( cursor.getString( DepartmentFragment.COL_DEPARTMENT_NAME) );
     }
 
     class ViewHolder {

@@ -62,7 +62,7 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_directory_person, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_dir_person, container, false);
         ButterKnife.inject(this, rootView);
         return rootView;
     }
@@ -91,7 +91,7 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
         getActivity().setTitle( data.getString(COL_PERSON_NAME) );
 
         Picasso.with(getActivity())
-                .load( data.getString(COL_PERSON_PICTURE))
+                .load(data.getString(COL_PERSON_PICTURE))
                 .fit()
                 .centerCrop()
                 .into(mImageView, new Callback() {
