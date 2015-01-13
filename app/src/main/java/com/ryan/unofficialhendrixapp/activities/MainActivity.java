@@ -15,12 +15,14 @@ import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
-import com.ryan.unofficialhendrixapp.fragments.TabbedDirectoryFragment;
+import com.ryan.unofficialhendrixapp.fragments.TabbedStaffFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends ActionBarActivity {
+    private static final int NEWS_LOCATION = 0;
+    private static final int STAFF_DIRECTORY_LOCATION = 1;
 
     @InjectView(R.id.left_drawer) ListView mDrawerView;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -38,13 +40,14 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout.setDrawerListener(mActionBarToggle);
 
+        getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         if ( savedInstanceState == null ) {
-            mDrawerView.setItemChecked(0, true);
+            mDrawerView.setItemChecked(NEWS_LOCATION, true);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_main_container, NewsFragment.newInstance(0, getApplicationContext()))
+                    .replace(R.id.fragment_main_container, NewsFragment.newInstance(NEWS_LOCATION, getApplicationContext()))
                     .commit();
         }
 
@@ -91,15 +94,14 @@ public class MainActivity extends ActionBarActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Fragment fragment;
             switch ( position ) {
-                case 0:
+                case NEWS_LOCATION:
                     fragment = NewsFragment.newInstance(position, getApplicationContext());
                     break;
-                case 1:
-                    fragment = TabbedDirectoryFragment.newInstance(position, getApplicationContext());
+                case STAFF_DIRECTORY_LOCATION:
+                    fragment = TabbedStaffFragment.newInstance(position, getApplicationContext());
                     break;
                 default:
-                    fragment = NewsFragment.newInstance(position, getApplicationContext());
-                    break;
+                    throw new IllegalArgumentException("Option not accounted for in Nav Drawer");
             }
 
             getSupportFragmentManager().beginTransaction()

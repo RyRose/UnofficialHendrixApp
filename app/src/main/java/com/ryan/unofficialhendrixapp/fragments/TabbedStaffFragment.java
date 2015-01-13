@@ -10,41 +10,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.directory.AlphabeticalFragment;
-import com.ryan.unofficialhendrixapp.fragments.directory.DepartmentFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.ByDeptFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.ByLetterFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class TabbedDirectoryFragment extends Fragment {
+public class TabbedStaffFragment extends BaseNavDrawerFragment {
 
-    @InjectView(R.id.staffPager) ViewPager mViewPager;
+    private static final int BY_DEPT_POSITION = 0;
+    private static final int BY_LETTER_POSITION = 1;
+
+    @InjectView(R.id.staff_pager) ViewPager mViewPager;
+    @InjectView(R.id.staff_tabs) PagerSlidingTabStrip tabs;
 
 
-    public static TabbedDirectoryFragment newInstance(int pos, Context context) {
+    public static TabbedStaffFragment newInstance(int pos, Context context) {
         Bundle bundle = new Bundle();
         bundle.putInt(context.getResources().getString(R.string.fragment_pos_key), pos);
-        TabbedDirectoryFragment fragment = new TabbedDirectoryFragment();
+        TabbedStaffFragment fragment = new TabbedStaffFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dir_tabbed, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_staff_tabbed, container, false);
         ButterKnife.inject(this, rootView);
-        mViewPager.setAdapter(new StaffPagerAdapter());
+        StaffPagerAdapter adapter = new StaffPagerAdapter();
+        mViewPager.setAdapter(adapter);
+        tabs.setViewPager(mViewPager);
+
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        int name_pos = getArguments().getInt(getResources().getString(R.string.fragment_pos_key));
-        getActivity().setTitle(getResources().getStringArray(R.array.drawer_names)[name_pos]);
     }
-
 
     private class StaffPagerAdapter extends FragmentPagerAdapter {
 
@@ -55,10 +60,10 @@ public class TabbedDirectoryFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0:
-                    return DepartmentFragment.newInstance();
-                case 1:
-                    return AlphabeticalFragment.newInstance();
+                case BY_DEPT_POSITION:
+                    return ByDeptFragment.newInstance();
+                case BY_LETTER_POSITION:
+                    return ByLetterFragment.newInstance();
                 default:
                     throw new IllegalArgumentException("Fragment not found in viewpager");
             }
@@ -71,14 +76,18 @@ public class TabbedDirectoryFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            String name;
             switch (position) {
-                case 0:
-                    return "By Dept";
-                case 1:
-                    return "By Name";
+                case BY_DEPT_POSITION:
+                    name = "By Department";
+                    break;
+                case BY_LETTER_POSITION:
+                    name = "By Name";
+                    break;
                 default:
                     throw new IllegalArgumentException("Page cannot be found in ViewPager");
             }
+            return name;
         }
     }
 }

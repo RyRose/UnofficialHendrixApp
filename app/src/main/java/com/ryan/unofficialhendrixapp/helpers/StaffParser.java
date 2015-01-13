@@ -6,7 +6,7 @@ import android.content.res.XmlResourceParser;
 import android.util.Log;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.models.Person;
+import com.ryan.unofficialhendrixapp.models.Staff;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -14,18 +14,18 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DirectoryParser {
+public class StaffParser {
     private final String LOG_TAG = getClass().getSimpleName();
 
     private Context mContext;
 
-    public DirectoryParser( Context context) {
+    public StaffParser(Context context) {
         mContext = context;
     }
 
-    public ArrayList<Person> parse() {
+    public ArrayList<Staff> parse() {
         XmlResourceParser parser = mContext.getResources().getXml(R.xml.staff);
-        ArrayList<Person> personList = new ArrayList<Person>();
+        ArrayList<Staff> staffList = new ArrayList<Staff>();
 
         try {
             parser.next();
@@ -38,20 +38,20 @@ public class DirectoryParser {
                 }
                 String name = parser.getName();
                 if (name.equals( mContext.getResources().getStringArray(R.array.dir_keys)[1] )) {
-                    personList.add(getEntry(parser));
+                    staffList.add(getEntry(parser));
                 }
             }
 
         } catch ( IOException | XmlPullParserException e ) {
             Log.e(LOG_TAG, "Cannot access data: " + e.getMessage());
             e.printStackTrace();
-            personList = new ArrayList<Person>();
+            staffList = new ArrayList<Staff>();
         }
 
-        return personList;
+        return staffList;
     }
 
-    private Person getEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private Staff getEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         String item_key  = mContext.getResources().getStringArray(R.array.dir_keys)[1];
         String link_key  = mContext.getResources().getStringArray(R.array.dir_keys)[2];
         String name_key  = mContext.getResources().getStringArray(R.array.dir_keys)[3];
@@ -96,7 +96,7 @@ public class DirectoryParser {
             else skip(parser);
 
         }
-        return new Person(link, name, title, dept, phone, email, line1, line2);
+        return new Staff(link, name, title, dept, phone, email, line1, line2);
     }
 
     // Processes title tags in the feed.

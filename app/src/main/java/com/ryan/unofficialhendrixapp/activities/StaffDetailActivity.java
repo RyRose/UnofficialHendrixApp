@@ -7,10 +7,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.directory.PersonDetailFragment;
-import com.ryan.unofficialhendrixapp.fragments.directory.PersonGridFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.StaffDetailFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.StaffGridFragment;
 
-public class DirectoryDetailActivity extends ActionBarActivity implements PersonGridFragment.OnPersonSelectedListener{
+public class StaffDetailActivity extends ActionBarActivity implements StaffGridFragment.OnPersonSelectedListener{
     private final String LOG_TAG = getClass().getSimpleName();
 
     public static final String DEPT_KEY = "dept_key";
@@ -21,20 +21,21 @@ public class DirectoryDetailActivity extends ActionBarActivity implements Person
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dir_detail);
+        getSupportActionBar().setElevation(0);
 
         if ( savedInstanceState == null) {
             Fragment fragment;
             if (getIntent().hasExtra(DEPT_KEY)) {
                 String dept = getIntent().getStringExtra(DEPT_KEY);
-                fragment = PersonGridFragment.newInstance(dept, null);
+                fragment = StaffGridFragment.newInstance(dept, null);
 
             } else if (getIntent().hasExtra(LETTER_KEY)) {
                 String letter = getIntent().getStringExtra(LETTER_KEY);
-                fragment = PersonGridFragment.newInstance(null, letter);
+                fragment = StaffGridFragment.newInstance(null, letter);
 
             } else {
                 int id = getIntent().getIntExtra(ID_KEY, 0);
-                fragment = PersonDetailFragment.newInstance(id);
+                fragment = StaffDetailFragment.newInstance(id);
             }
 
             getSupportFragmentManager().beginTransaction()
@@ -63,10 +64,10 @@ public class DirectoryDetailActivity extends ActionBarActivity implements Person
     }
 
     @Override
-    public void onPersonSelected(int id) {
+    public void onPersonSelected(long id) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_directory_detail_container,
-                        PersonDetailFragment.newInstance(id))
+                        StaffDetailFragment.newInstance( (int) id) )
                 .addToBackStack(null)
                 .commit();
     }

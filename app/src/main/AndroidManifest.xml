@@ -8,7 +8,7 @@
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBar"
+        android:theme="@style/AppTheme"
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_launcher" >
         <activity
@@ -28,9 +28,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ryan.unofficialhendrixapp.activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.DirectoryDetailActivity"
+        <activity android:name=".activities.StaffDetailActivity"
             android:parentActivityName=".activities.MainActivity" >
         </activity>
+
+        <service
+            android:name=".services.NewsRefreshService"
+            android:exported="false"/>
         <provider
             android:authorities="com.ryan.unofficialhendrixapp.provider"
             android:name=".data.HendrixProvider"

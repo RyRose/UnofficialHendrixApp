@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.directory;
+package com.ryan.unofficialhendrixapp.fragments.staff;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.activities.DirectoryDetailActivity;
+import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.InjectViews;
 
-public class PersonDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StaffDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String[] PERSON_COLUMNS = {
             StaffColumn.COLUMN_NAME,
@@ -52,17 +52,17 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
     TextView[] mPersonViews;
 
 
-    public static PersonDetailFragment newInstance (int id) {
+    public static StaffDetailFragment newInstance (int id) {
         Bundle bundle = new Bundle();
-        bundle.putInt(DirectoryDetailActivity.ID_KEY, id);
-        PersonDetailFragment fragment = new PersonDetailFragment();
+        bundle.putInt(StaffDetailActivity.ID_KEY, id);
+        StaffDetailFragment fragment = new StaffDetailFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dir_person, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_staff_person, container, false);
         ButterKnife.inject(this, rootView);
         return rootView;
     }
@@ -80,7 +80,7 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
                 StaffColumn.CONTENT_URI,
                 PERSON_COLUMNS,
                 "_ID == ?",
-                new String[] {String.valueOf(getArguments().getInt(DirectoryDetailActivity.ID_KEY))},
+                new String[] {String.valueOf(getArguments().getInt(StaffDetailActivity.ID_KEY))},
                 null
         );
     }
@@ -96,14 +96,12 @@ public class PersonDetailFragment extends Fragment implements LoaderManager.Load
                 .centerCrop()
                 .into(mImageView, new Callback() {
                     @Override
-                    public void onSuccess() {
-
-                    }
+                    public void onSuccess(){}
 
                     @Override
                     public void onError() {
                         Picasso.with(getActivity())
-                                .load( R.drawable.placeholder_person)
+                                .load(R.drawable.placeholder_person)
                                 .fit()
                                 .centerInside()
                                 .into(mImageView);

@@ -1,14 +1,12 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,11 +23,7 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.adapters.NewsAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
-import com.ryan.unofficialhendrixapp.helpers.NewsParser;
-import com.ryan.unofficialhendrixapp.helpers.Utility;
-import com.ryan.unofficialhendrixapp.models.NewsEntry;
-
-import java.util.ArrayList;
+import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -37,21 +31,15 @@ import butterknife.OnItemClick;
 import icepick.Icepick;
 import icepick.Icicle;
 
-public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks {
-    private final String LOG_TAG = getClass().getSimpleName();
+public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager.LoaderCallbacks {
+    public final String LOG_TAG = getClass().getSimpleName();
 
-    @InjectView(R.id.fragment_news_listView) ListView mListView;
-    @InjectView(R.id.fragment_news_swipe_refresh_layout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    @Icicle int mPosition = 0;
-    NewsAdapter mNewsAdapter;
-
-    private static final String[] NEWS_COLUMNS = {
-        NewsColumn._ID,
-        NewsColumn.COLUMN_TITLE,
-        NewsColumn.COLUMN_DESCRIPTION,
-        NewsColumn.COLUMN_DATE,
-        NewsColumn.COLUMN_LINK
+    public static final String[] NEWS_COLUMNS = {
+            NewsColumn._ID,
+            NewsColumn.COLUMN_TITLE,
+            NewsColumn.COLUMN_DESCRIPTION,
+            NewsColumn.COLUMN_DATE,
+            NewsColumn.COLUMN_LINK
     };
 
     public static final int COL_NEWS_ID = 0;
@@ -59,6 +47,14 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_NEWS_DESCRIPTION = 2;
     public static final int COL_NEWS_DATE = 3;
     public static final int COL_NEWS_LINK = 4;
+
+    private NewsReceiver mReceiver;
+
+
+    @InjectView(R.id.fragment_news_listView) ListView mListView;
+    @InjectView(R.id.fragment_news_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Icicle int mPosition = 0;
+    NewsAdapter mNewsAdapter;
 
     public static NewsFragment newInstance(int pos, Context context) {
         Bundle bundle = new Bundle();
@@ -71,45 +67,46 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
-        new FillNews(this).execute(false);
+        mReceiver = new NewsReceiver(new Handler(), this);
         mNewsAdapter = new NewsAdapter(getActivity(), null);
-        setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Icepick.restoreInstanceState(this, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.inject(this, rootView);
+
         mListView.setAdapter(mNewsAdapter);
+        mListView.setSelection(mPosition);
+
         mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh();
+                refresh(true);
             }
         });
-        return rootView;
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        refresh(false);
         getLoaderManager().initLoader(0, null, this);
-        mListView.setSelection(mPosition);
-        int name_pos = getArguments().getInt(getResources().getString(R.string.fragment_pos_key));
-        getActivity().setTitle(getResources().getStringArray(R.array.drawer_names)[ name_pos ]);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mPosition = mListView.getFirstVisiblePosition();
+        setHasOptionsMenu(true);
+        return rootView;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        mPosition = mListView.getFirstVisiblePosition();
         Icepick.saveInstanceState(this, outState);
+    }
+
+    @OnItemClick(R.id.fragment_news_listView)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor c = mNewsAdapter.getCursor();
+        c.moveToPosition(position);
+        String link = c.getString(NewsFragment.COL_NEWS_LINK);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        startActivity(intent);
     }
 
     @Override
@@ -120,29 +117,15 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch(id) {
+        boolean isOptionSelected = true;
+        switch(item.getItemId()) {
             case R.id.action_refresh:
-                refresh();
+                refresh(true);
                 break;
             default:
-                return false;
+                isOptionSelected = false;
         }
-        return true;
-    }
-
-    public void refresh() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        new FillNews(this).execute(true);
-    }
-
-    @OnItemClick(R.id.fragment_news_listView)
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor c = mNewsAdapter.getCursor();
-        c.moveToPosition(position);
-        String link = c.getString(NewsFragment.COL_NEWS_LINK);
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        startActivity(intent);
+        return isOptionSelected;
     }
 
     @Override
@@ -158,73 +141,39 @@ public class NewsFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onLoadFinished(android.support.v4.content.Loader loader, Object data) {
+    public void onLoadFinished(Loader loader, Object data) {
         mNewsAdapter.changeCursor((Cursor) data);
     }
 
     @Override
-    public void onLoaderReset(android.support.v4.content.Loader loader) {
+    public void onLoaderReset(Loader loader) {
         mNewsAdapter.changeCursor(null);
     }
 
-    /**
-     *
-     * Fetches the xml document from the rss feed showing the current news on Hendrix College's Website
-     * to be displayed in a list view on the main activity
-     *
-     */
-    private class FillNews extends AsyncTask< Boolean, Void, Boolean > {
+    private void refresh(boolean forceRefresh) {
+        mSwipeRefreshLayout.setRefreshing(forceRefresh);
+        Intent intent = new Intent(getActivity(), NewsRefreshService.class);
 
-        private Fragment mFragment;
-        private String LOG_TAG = getClass().getSimpleName();
+        intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
+        intent.putExtra(NewsRefreshService.FORCE_NEWS_REFRESH_KEY, forceRefresh);
 
-        public FillNews(Fragment fragment) {
-            mFragment = fragment;
+        getActivity().startService(intent);
+    }
+
+    private class NewsReceiver extends ResultReceiver {
+        private LoaderManager.LoaderCallbacks mCallback;
+
+        public NewsReceiver(Handler handler, LoaderManager.LoaderCallbacks callback) {
+            super(handler);
+            mCallback = callback;
         }
 
         @Override
-        protected Boolean doInBackground(Boolean... params ) {
-
-            if ( canFillNewsDb(params[0]) ) {
-                fillNewsDb();
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean bool) {
-            super.onPostExecute(bool);
-            getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
-            mSwipeRefreshLayout.setRefreshing(false);
-            mFragment = null;
-        }
-
-        private boolean canFillNewsDb(boolean forceFill) {
-            Cursor c = getActivity().getContentResolver()
-                    .query(NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null);
-            if (c == null) {
-                return Utility.isOnline(getActivity()) && forceFill;
-            } else {
-                boolean bool = !c.moveToFirst();
-                c.close();
-                return Utility.isOnline(getActivity()) && (bool || forceFill);
-            }
-        }
-
-        private void fillNewsDb() {
-            ContentValues row;
-            ArrayList<NewsEntry> newsEntryList = new NewsParser(getActivity()).parse();
-
-            getActivity().getContentResolver().delete(NewsColumn.CONTENT_URI, null, null);
-            for ( NewsEntry entry : newsEntryList ) {
-                row = new ContentValues();
-                row.put( NewsColumn.COLUMN_TITLE, entry.getTitle());
-                row.put( NewsColumn.COLUMN_DESCRIPTION, entry.getDescription());
-                row.put( NewsColumn.COLUMN_DATE, entry.getDate());
-                row.put( NewsColumn.COLUMN_LINK, entry.getLink());
-                getActivity().getContentResolver().insert(NewsColumn.CONTENT_URI, row);
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (isAdded()) {
+                getLoaderManager().restartLoader(0, null, mCallback);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }
     }

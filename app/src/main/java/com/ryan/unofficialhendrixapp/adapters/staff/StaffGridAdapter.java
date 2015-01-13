@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.adapters.directory;
+package com.ryan.unofficialhendrixapp.adapters.staff;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,22 +10,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.directory.PersonGridFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.StaffGridFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class DirectoryGridAdapter extends CursorAdapter {
+public class StaffGridAdapter extends CursorAdapter {
 
-    public DirectoryGridAdapter(Context context, Cursor c, int flags) {
+    public StaffGridAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.fragment_dir_grid_item, parent, false);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.fragment_staff_grid_item, parent, false);
         ViewHolder holder = new ViewHolder(rootView);
         rootView.setTag(holder);
         return rootView;
@@ -34,9 +34,9 @@ public class DirectoryGridAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         final ViewHolder holder = (ViewHolder) view.getTag();
-        holder.textView.setText(cursor.getString(PersonGridFragment.COL_GRID_NAME));
+        holder.textView.setText(cursor.getString(StaffGridFragment.COL_GRID_NAME));
 
-        Picasso.with(context).load(cursor.getString(PersonGridFragment.COL_GRID_PIC))
+        Picasso.with(context).load(cursor.getString(StaffGridFragment.COL_GRID_PIC))
                 .fit().centerCrop().into(holder.imageView, new Callback() {
             @Override
             public void onSuccess() {

@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.directory;
+package com.ryan.unofficialhendrixapp.fragments.staff;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -15,15 +15,15 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.activities.DirectoryDetailActivity;
-import com.ryan.unofficialhendrixapp.adapters.directory.DirectoryGridAdapter;
+import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
+import com.ryan.unofficialhendrixapp.adapters.staff.StaffGridAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 
-public class PersonGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StaffGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final static String[] GRID_COLUMNS = {
             HendrixContract.StaffColumn._ID,
@@ -43,21 +43,21 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
 
 
     @InjectView(R.id.directory_grid) GridView mGridView;
-    private DirectoryGridAdapter mAdapter;
+    private StaffGridAdapter mAdapter;
     private OnPersonSelectedListener mCallback;
 
     public interface OnPersonSelectedListener{
-        public void onPersonSelected(int id);
+        public void onPersonSelected(long id);
     }
 
-    public static PersonGridFragment newInstance( String dept, String letter) {
+    public static StaffGridFragment newInstance( String dept, String letter) {
         Bundle bundle = new Bundle();
         if (letter != null) {
-            bundle.putString(DirectoryDetailActivity.LETTER_KEY, letter);
+            bundle.putString(StaffDetailActivity.LETTER_KEY, letter);
         } else {
-            bundle.putString(DirectoryDetailActivity.DEPT_KEY, dept);
+            bundle.putString(StaffDetailActivity.DEPT_KEY, dept);
         }
-        PersonGridFragment fragment = new PersonGridFragment();
+        StaffGridFragment fragment = new StaffGridFragment();
         fragment.setArguments(bundle);
         fragment.setRetainInstance(true);
         return fragment;
@@ -72,12 +72,12 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new DirectoryGridAdapter(getActivity(), null, DirectoryGridAdapter.NO_SELECTION);
+        mAdapter = new StaffGridAdapter(getActivity(), null, StaffGridAdapter.NO_SELECTION);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dir_grid, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_staff_grid, container, false);
         ButterKnife.inject(this, rootView);
         mGridView.setAdapter(mAdapter);
         return rootView;
@@ -86,12 +86,12 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getArguments().containsKey(DirectoryDetailActivity.DEPT_KEY)) {
-            mDept = getArguments().getString(DirectoryDetailActivity.DEPT_KEY);
+        if (getArguments().containsKey(StaffDetailActivity.DEPT_KEY)) {
+            mDept = getArguments().getString(StaffDetailActivity.DEPT_KEY);
             mLetter = null;
         } else {
             mDept = null;
-            mLetter = getArguments().getString(DirectoryDetailActivity.LETTER_KEY);
+            mLetter = getArguments().getString(StaffDetailActivity.LETTER_KEY);
         }
         getActivity().setTitle( (mDept != null) ? mDept : mLetter );
         if (mDept != null) {
@@ -109,7 +109,7 @@ public class PersonGridFragment extends Fragment implements LoaderManager.Loader
 
     @OnItemClick(R.id.directory_grid)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mCallback.onPersonSelected( (int) id);
+        mCallback.onPersonSelected(id);
     }
 
     @Override

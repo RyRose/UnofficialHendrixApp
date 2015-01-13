@@ -24,7 +24,7 @@ public class NewsParser {
         mContext = context;
     }
 
-    public ArrayList<NewsEntry> parse() {
+    public ArrayList<NewsEntry> getNewsEntryList() {
         InputStream inputStream;
         XmlPullParser parser;
         ArrayList<NewsEntry> newsEntryList = new ArrayList<NewsEntry>();

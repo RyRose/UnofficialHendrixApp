@@ -1,6 +1,6 @@
 package com.ryan.unofficialhendrixapp.models;
 
-public class Person {
+public class Staff {
     private String link;
     private String name;
     private String title;
@@ -10,7 +10,7 @@ public class Person {
     private String loc_line_1;
     private String loc_line_2;
 
-    public Person( String link, String name, String title, String dept, String phone, String email, String line1, String line2 ) {
+    public Staff(String link, String name, String title, String dept, String phone, String email, String line1, String line2) {
         this.link = link;
         this.name = name;
         this.title = title;
