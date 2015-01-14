@@ -14,8 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
+import com.ryan.unofficialhendrixapp.fragments.BaseNavDrawerFragment;
 import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
 import com.ryan.unofficialhendrixapp.fragments.TabbedStaffFragment;
+import com.ryan.unofficialhendrixapp.fragments.WebFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -23,6 +25,7 @@ import butterknife.InjectView;
 public class MainActivity extends ActionBarActivity {
     private static final int NEWS_LOCATION = 0;
     private static final int STAFF_DIRECTORY_LOCATION = 1;
+    private static final int CAMPUS_WEB_LOCATION = 2;
 
     @InjectView(R.id.left_drawer) ListView mDrawerView;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -33,24 +36,35 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+        setUpActionBar();
+        setUpNavDrawer();
+
+        if ( savedInstanceState == null ) {
+            setUpDefaultFragment();
+        }
+
+    }
+
+    private void setUpActionBar() {
         mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
-
-        mDrawerView.setAdapter(new ArrayAdapter<String>(this, R.layout.activity_main_drawer_list_item, R.id.drawer_item, getResources().getStringArray(R.array.drawer_names)));
-        mDrawerView.setOnItemClickListener( new DrawerItemClickListener() );
-
-        mDrawerLayout.setDrawerListener(mActionBarToggle);
-
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
 
-        if ( savedInstanceState == null ) {
-            mDrawerView.setItemChecked(NEWS_LOCATION, true);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_main_container, NewsFragment.newInstance(NEWS_LOCATION, getApplicationContext()))
-                    .commit();
-        }
+    private void setUpNavDrawer() {
+        String[] drawerItems = getResources().getStringArray(R.array.drawer_names);
+        ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.activity_main_drawer_item, R.id.drawer_item, drawerItems);
+        mDrawerView.setAdapter(navDrawerAdapter);
+        mDrawerView.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerLayout.setDrawerListener(mActionBarToggle);
+    }
 
+    private void setUpDefaultFragment() {
+        mDrawerView.setItemChecked(NEWS_LOCATION, true);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_main_container, NewsFragment.newInstance(NEWS_LOCATION))
+                .commit();
     }
 
     @Override
@@ -84,8 +98,18 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mActionBarToggle.syncState();
+    }
+
+    // Hacky way of checking if the current fragment is a web fragment and pressing back should
+    // go back in the webview or perform just a regular back where it pops the backstack
+    @Override
+    public void onBackPressed() {
+        BaseNavDrawerFragment frag = (BaseNavDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+        if (frag != null && frag.isWebFragment() && ((WebFragment) frag).canGoBack()) {
+            return;
+        }
+        super.onBackPressed();
     }
 
     private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
@@ -95,10 +119,13 @@ public class MainActivity extends ActionBarActivity {
             Fragment fragment;
             switch ( position ) {
                 case NEWS_LOCATION:
-                    fragment = NewsFragment.newInstance(position, getApplicationContext());
+                    fragment = NewsFragment.newInstance(position);
                     break;
                 case STAFF_DIRECTORY_LOCATION:
-                    fragment = TabbedStaffFragment.newInstance(position, getApplicationContext());
+                    fragment = TabbedStaffFragment.newInstance(position);
+                    break;
+                case CAMPUS_WEB_LOCATION:
+                    fragment = WebFragment.newInstance(position);
                     break;
                 default:
                     throw new IllegalArgumentException("Option not accounted for in Nav Drawer");

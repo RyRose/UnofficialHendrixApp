@@ -1,6 +1,5 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -56,9 +55,9 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @Icicle int mPosition = 0;
     NewsAdapter mNewsAdapter;
 
-    public static NewsFragment newInstance(int pos, Context context) {
+    public static NewsFragment newInstance(int pos) {
         Bundle bundle = new Bundle();
-        bundle.putInt(context.getResources().getString(R.string.fragment_pos_key), pos);
+        bundle.putInt(NAV_DRAWER_KEY, pos);
         NewsFragment fragment = new NewsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -68,7 +67,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mReceiver = new NewsReceiver(new Handler(), this);
-        mNewsAdapter = new NewsAdapter(getActivity(), null);
     }
 
     @Override
@@ -77,20 +75,34 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.inject(this, rootView);
 
+        setUpViews();
+
+        refresh(false);
+        getLoaderManager().initLoader(0, null, this);
+        setHasOptionsMenu(true);
+        return rootView;
+    }
+
+    private void setUpViews() {
+        mNewsAdapter = new NewsAdapter(getActivity(), null);
         mListView.setAdapter(mNewsAdapter);
         mListView.setSelection(mPosition);
-
         mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refresh(true);
             }
         });
+    }
 
-        refresh(false);
-        getLoaderManager().initLoader(0, null, this);
-        setHasOptionsMenu(true);
-        return rootView;
+    private void refresh(boolean forceRefresh) {
+        mSwipeRefreshLayout.setRefreshing(forceRefresh);
+        Intent intent = new Intent(getActivity(), NewsRefreshService.class);
+
+        intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
+        intent.putExtra(NewsRefreshService.FORCE_NEWS_REFRESH_KEY, forceRefresh);
+
+        getActivity().startService(intent);
     }
 
     @Override
@@ -103,7 +115,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @OnItemClick(R.id.fragment_news_listView)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor c = mNewsAdapter.getCursor();
-        c.moveToPosition(position);
         String link = c.getString(NewsFragment.COL_NEWS_LINK);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         startActivity(intent);
@@ -148,16 +159,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @Override
     public void onLoaderReset(Loader loader) {
         mNewsAdapter.changeCursor(null);
-    }
-
-    private void refresh(boolean forceRefresh) {
-        mSwipeRefreshLayout.setRefreshing(forceRefresh);
-        Intent intent = new Intent(getActivity(), NewsRefreshService.class);
-
-        intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
-        intent.putExtra(NewsRefreshService.FORCE_NEWS_REFRESH_KEY, forceRefresh);
-
-        getActivity().startService(intent);
     }
 
     private class NewsReceiver extends ResultReceiver {

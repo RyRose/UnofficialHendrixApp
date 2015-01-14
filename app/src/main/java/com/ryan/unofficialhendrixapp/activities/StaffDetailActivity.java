@@ -23,28 +23,43 @@ public class StaffDetailActivity extends ActionBarActivity implements StaffGridF
         setContentView(R.layout.activity_dir_detail);
         getSupportActionBar().setElevation(0);
 
-        if ( savedInstanceState == null) {
-            Fragment fragment;
-            if (getIntent().hasExtra(DEPT_KEY)) {
-                String dept = getIntent().getStringExtra(DEPT_KEY);
-                fragment = StaffGridFragment.newInstance(dept, null);
-
-            } else if (getIntent().hasExtra(LETTER_KEY)) {
-                String letter = getIntent().getStringExtra(LETTER_KEY);
-                fragment = StaffGridFragment.newInstance(null, letter);
-
-            } else {
-                int id = getIntent().getIntExtra(ID_KEY, 0);
-                fragment = StaffDetailFragment.newInstance(id);
-            }
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_directory_detail_container, fragment)
-                    .commit();
+        if ( savedInstanceState == null ) {
+            setUpFirstFragment();
         }
     }
 
+    private void setUpFirstFragment() {
+        Fragment fragment;
+        if (getIntent().hasExtra(DEPT_KEY)) {
+            fragment = getDepartmentFragment();
 
+        } else if (getIntent().hasExtra(LETTER_KEY)) {
+            fragment = getGridFragment();
+
+        } else {
+            fragment = getStaffDetailFragment();
+        }
+        startFragment(fragment);
+    }
+
+    private Fragment getDepartmentFragment(){
+        String dept = getIntent().getStringExtra(DEPT_KEY);
+        return StaffGridFragment.newInstance(dept, null);
+    }
+
+    private Fragment getGridFragment(){
+        String letter = getIntent().getStringExtra(LETTER_KEY);
+        return StaffGridFragment.newInstance(null, letter);
+    }
+
+    private Fragment getStaffDetailFragment(){
+        int id = getIntent().getIntExtra(ID_KEY, 0);
+        return StaffDetailFragment.newInstance(id);
+    }
+
+    private void startFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_directory_detail_container, fragment).commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,8 +81,7 @@ public class StaffDetailActivity extends ActionBarActivity implements StaffGridF
     @Override
     public void onPersonSelected(long id) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_directory_detail_container,
-                        StaffDetailFragment.newInstance( (int) id) )
+                .replace(R.id.fragment_directory_detail_container, StaffDetailFragment.newInstance( (int) id) )
                 .addToBackStack(null)
                 .commit();
     }

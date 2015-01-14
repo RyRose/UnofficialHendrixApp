@@ -1,6 +1,5 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,9 +26,9 @@ public class TabbedStaffFragment extends BaseNavDrawerFragment {
     @InjectView(R.id.staff_tabs) PagerSlidingTabStrip tabs;
 
 
-    public static TabbedStaffFragment newInstance(int pos, Context context) {
+    public static TabbedStaffFragment newInstance(int pos) {
         Bundle bundle = new Bundle();
-        bundle.putInt(context.getResources().getString(R.string.fragment_pos_key), pos);
+        bundle.putInt(NAV_DRAWER_KEY, pos);
         TabbedStaffFragment fragment = new TabbedStaffFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -39,16 +38,13 @@ public class TabbedStaffFragment extends BaseNavDrawerFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_staff_tabbed, container, false);
         ButterKnife.inject(this, rootView);
-        StaffPagerAdapter adapter = new StaffPagerAdapter();
-        mViewPager.setAdapter(adapter);
-        tabs.setViewPager(mViewPager);
-
+        setUpViewPagerAndTabs();
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void setUpViewPagerAndTabs() {
+        mViewPager.setAdapter( new StaffPagerAdapter() );
+        tabs.setViewPager(mViewPager);
     }
 
     private class StaffPagerAdapter extends FragmentPagerAdapter {
@@ -70,24 +66,14 @@ public class TabbedStaffFragment extends BaseNavDrawerFragment {
         }
 
         @Override
-        public int getCount() {
-            return 2;
+        public CharSequence getPageTitle(int position) {
+            return getResources().getStringArray(R.array.tab_names)[position];
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            String name;
-            switch (position) {
-                case BY_DEPT_POSITION:
-                    name = "By Department";
-                    break;
-                case BY_LETTER_POSITION:
-                    name = "By Name";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Page cannot be found in ViewPager");
-            }
-            return name;
+        public int getCount() {
+            return getResources().getStringArray(R.array.tab_names).length;
         }
+
     }
 }

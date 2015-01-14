@@ -6,40 +6,50 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:icon="@drawable/ic_launcher"
-        android:logo="@drawable/ic_launcher" >
+        android:logo="@drawable/ic_launcher"
+        android:allowBackup="true"
+        android:hardwareAccelerated="false" >
+
         <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name" >
+            android:name=".activities.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" >
+            </meta-data>
         </activity>
         <activity
-            android:name=".activities.NewsDetailActivity"
-            android:label="@string/title_activity_news_detail"
+            android:name=".activities.StaffDetailActivity"
             android:parentActivityName=".activities.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.ryan.unofficialhendrixapp.activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.StaffDetailActivity"
+        <activity
+            android:name=".activities.SearchableActivity"
+            android:label="@string/title_activity_searchable"
             android:parentActivityName=".activities.MainActivity" >
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/staff_search">
+            </meta-data>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
         </activity>
 
         <service
             android:name=".services.NewsRefreshService"
-            android:exported="false"/>
-        <provider
-            android:authorities="com.ryan.unofficialhendrixapp.provider"
-            android:name=".data.HendrixProvider"
             android:exported="false">
+        </service>
+
+        <provider
+            android:name=".data.HendrixProvider"
+            android:authorities="com.ryan.unofficialhendrixapp.provider"
+            android:exported="false" >
         </provider>
     </application>
-
 </manifest>

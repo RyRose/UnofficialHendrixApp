@@ -4,6 +4,7 @@
     android:layout_height="wrap_content" >
 
     <ImageView
+        android:contentDescription="@string/image_description_staff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/person_ImageView"
@@ -79,7 +80,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email:"
+        android:text="@string/email_staff"
         android:id="@+id/textView"
         android:textSize="20sp"
         android:layout_alignTop="@+id/person_textView4"
@@ -89,7 +90,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone:"
+        android:text="@string/phone_staff"
         android:id="@+id/textView2"
         android:textSize="20sp"
         android:layout_below="@+id/textView"

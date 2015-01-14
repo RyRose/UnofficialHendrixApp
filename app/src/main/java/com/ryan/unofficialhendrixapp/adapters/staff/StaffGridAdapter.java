@@ -39,9 +39,7 @@ public class StaffGridAdapter extends CursorAdapter {
         Picasso.with(context).load(cursor.getString(StaffGridFragment.COL_GRID_PIC))
                 .fit().centerCrop().into(holder.imageView, new Callback() {
             @Override
-            public void onSuccess() {
-
-            }
+            public void onSuccess() {}
 
             @Override
             public void onError() {
@@ -55,10 +53,8 @@ public class StaffGridAdapter extends CursorAdapter {
     }
 
     class ViewHolder {
-        @InjectView(R.id.fragment_directory_grid_image)
-        ImageView imageView;
-        @InjectView(R.id.fragment_directory_grid_text)
-        TextView textView;
+        @InjectView(R.id.fragment_directory_grid_image) ImageView imageView;
+        @InjectView(R.id.fragment_directory_grid_text) TextView textView;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);

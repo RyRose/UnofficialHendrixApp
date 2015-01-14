@@ -16,8 +16,7 @@ public class ByLetterFragment extends BaseByCategoryFragment {
     "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     public static ByLetterFragment newInstance() {
-        ByLetterFragment fragment = new ByLetterFragment();
-        return fragment;
+        return new ByLetterFragment();
     }
 
     @Override
@@ -28,7 +27,6 @@ public class ByLetterFragment extends BaseByCategoryFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
         String letter = getListAdapter().getItem(position).toString();
         Intent intent = new Intent(getActivity(), StaffDetailActivity.class);
         intent.putExtra(StaffDetailActivity.LETTER_KEY, letter);

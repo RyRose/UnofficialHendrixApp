@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.adapters.staff.ByDeptAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract;
+import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
 import com.ryan.unofficialhendrixapp.helpers.StaffParser;
 import com.ryan.unofficialhendrixapp.models.Staff;
 
@@ -51,7 +53,6 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
         Cursor c = ( (ByDeptAdapter) getListAdapter()).getCursor();
         String dept = c.getString(COL_DEPARTMENT_NAME);
         Intent intent = new Intent(getActivity(), StaffDetailActivity.class);
@@ -61,7 +62,7 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new android.support.v4.content.CursorLoader(
+        return new CursorLoader(
                 getActivity(),
                 HendrixContract.StaffColumn.CONTENT_URI_WITH_DISTINCT,
                 DEPARTMENT_COLUMNS,
@@ -92,11 +93,47 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
 
         @Override
         protected Boolean doInBackground(String... params) {
-            if ( canFillStaffTable(params) ) {
-                fillStaffTable();
-                return true;
-            } else {
+            return canFillStaffTable(params) && fillStaffTable();
+        }
+
+        private boolean canFillStaffTable(String... params) {
+            Cursor c = getActivity().getContentResolver().query(HendrixContract.StaffColumn.CONTENT_URI,
+                    params, null, null, null);
+
+            if (c == null) {
                 return false;
+            } else {
+                boolean bool = c.moveToFirst();
+                c.close();
+                return bool;
+            }
+        }
+
+        // returns true upon success, false otherwise
+        private boolean fillStaffTable() {
+            ArrayList<Staff> staffList = new StaffParser(getActivity()).parse();
+            if ( staffList.isEmpty() ) {
+                return false;
+            }
+            addToDatabase(staffList);
+            return true;
+        }
+
+        private void addToDatabase( ArrayList<Staff> staffList) {
+            ContentValues values;
+
+            getActivity().getContentResolver().delete(HendrixContract.StaffColumn.CONTENT_URI, null, null);
+            for ( Staff staff : staffList) {
+                values = new ContentValues();
+                values.put(StaffColumn.COLUMN_PICTURE, staff.getLink());
+                values.put(StaffColumn.COLUMN_NAME, staff.getName());
+                values.put(StaffColumn.COLUMN_TITLE, staff.getTitle());
+                values.put(StaffColumn.COLUMN_DEPARTMENT, staff.getDept());
+                values.put(StaffColumn.COLUMN_PHONE, staff.getPhone());
+                values.put(StaffColumn.COLUMN_EMAIL, staff.getEmail());
+                values.put(StaffColumn.COLUMN_LOCATION_LINE_1, staff.getline1());
+                values.put(StaffColumn.COLUMN_LOCATION_LINE_2, staff.getline2());
+                mFragment.getActivity().getContentResolver().insert(HendrixContract.StaffColumn.CONTENT_URI, values);
             }
         }
 
@@ -107,42 +144,6 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
                 getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
             }
             mFragment = null;
-        }
-
-        private boolean canFillStaffTable(String... params) {
-            Cursor c = getActivity().getContentResolver().query(HendrixContract.StaffColumn.CONTENT_URI,
-                    params,
-                    null,
-                    null,
-                    null);
-
-            if (c == null) {
-                return true;
-            } else {
-                boolean bool = c.moveToFirst();
-                c.close();
-                return !bool;
-            }
-        }
-
-        private void fillStaffTable() {
-            ContentValues values;
-            ArrayList<Staff> staffList = new StaffParser(getActivity()).parse();
-
-            getActivity().getContentResolver().delete(HendrixContract.StaffColumn.CONTENT_URI, null, null);
-            for ( Staff staff : staffList) {
-                values = new ContentValues();
-                values.put(HendrixContract.StaffColumn.COLUMN_PICTURE, staff.getLink());
-                values.put(HendrixContract.StaffColumn.COLUMN_NAME, staff.getName());
-                values.put(HendrixContract.StaffColumn.COLUMN_TITLE, staff.getTitle());
-                values.put(HendrixContract.StaffColumn.COLUMN_DEPARTMENT, staff.getDept());
-                values.put(HendrixContract.StaffColumn.COLUMN_PHONE, staff.getPhone());
-                values.put(HendrixContract.StaffColumn.COLUMN_EMAIL, staff.getEmail());
-                values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_1, staff.getline1());
-                values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_2, staff.getline2());
-                mFragment.getActivity().getContentResolver().insert(HendrixContract.StaffColumn.CONTENT_URI, values);
-            }
-
         }
     }
 }
