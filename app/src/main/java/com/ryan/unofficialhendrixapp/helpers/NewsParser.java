@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class NewsParser {
+public class NewsParser extends BaseParser {
 
     private final String LOG_TAG = getClass().getSimpleName();
     private Context mContext;
@@ -87,37 +87,6 @@ public class NewsParser {
 
         }
         return new NewsEntry(title, link, description, date.substring(0, 16));
-    }
-
-    // Processes title tags in the feed.
-    private String readCategory(XmlPullParser parser, String category) throws IOException, XmlPullParserException {
-        String data = "";
-        parser.require(XmlPullParser.START_TAG, null, category);
-
-        if (parser.next() == XmlPullParser.TEXT) {
-            data = parser.getText();
-            parser.nextTag();
-        }
-
-        parser.require(XmlPullParser.END_TAG, null, category);
-        return data;
-    }
-
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
     }
 
     private InputStream getRSSStream() {

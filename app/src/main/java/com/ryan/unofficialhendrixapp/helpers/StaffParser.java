@@ -14,7 +14,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StaffParser {
+public class StaffParser extends BaseParser{
     private final String LOG_TAG = getClass().getSimpleName();
 
     private Context mContext;
@@ -97,36 +97,5 @@ public class StaffParser {
 
         }
         return new Staff(link, name, title, dept, phone, email, line1, line2);
-    }
-
-    // Processes title tags in the feed.
-    private String readCategory(XmlPullParser parser, String category) throws IOException, XmlPullParserException {
-        String data = "";
-        parser.require(XmlPullParser.START_TAG, null, category);
-
-        if (parser.next() == XmlPullParser.TEXT) {
-            data = parser.getText();
-            parser.nextTag();
-        }
-
-        parser.require(XmlPullParser.END_TAG, null, category);
-        return data;
-    }
-
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
     }
 }
