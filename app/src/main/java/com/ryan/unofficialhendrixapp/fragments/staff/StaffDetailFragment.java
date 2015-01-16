@@ -46,9 +46,9 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     private static int COL_PERSON_ID = 7;
 
     @InjectView (R.id.person_ImageView) ImageView mImageView;
-    @InjectViews({R.id.person_textView1, R.id.person_textView2,
-                  R.id.person_textView4,  R.id.person_textView5,
-                  R.id.person_textView6,  R.id.person_textView7})
+    @InjectViews({R.id.person_nameView, R.id.person_titleView,
+                  R.id.person_emailView,  R.id.person_phoneView,
+                  R.id.person_line1View,  R.id.person_line2View})
     TextView[] mPersonViews;
 
 
@@ -103,7 +103,7 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
                         Picasso.with(getActivity())
                                 .load(R.drawable.placeholder_person)
                                 .fit()
-                                .centerInside()
+                                .centerCrop()
                                 .into(mImageView);
                     }
                 });
