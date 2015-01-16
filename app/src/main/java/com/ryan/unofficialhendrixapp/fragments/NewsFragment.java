@@ -67,6 +67,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mReceiver = new NewsReceiver(new Handler(), this);
+        mNewsAdapter = new NewsAdapter(getActivity(), null);
     }
 
     @Override
@@ -83,7 +84,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     }
 
     private void setUpViews() {
-        mNewsAdapter = new NewsAdapter(getActivity(), null);
         mListView.setAdapter(mNewsAdapter);
         mListView.setSelection(mPosition);
         mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
