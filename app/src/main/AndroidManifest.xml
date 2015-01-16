@@ -45,6 +45,10 @@
             android:name=".services.NewsRefreshService"
             android:exported="false">
         </service>
+        <service
+            android:name=".services.StaffDatabaseService"
+            android:exported="false">
+        </service>
 
         <provider
             android:name=".data.HendrixProvider"

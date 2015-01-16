@@ -1,11 +1,11 @@
 package com.ryan.unofficialhendrixapp.fragments.staff;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.preference.Preference;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -15,17 +15,13 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.adapters.staff.ByDeptAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract;
-import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
-import com.ryan.unofficialhendrixapp.helpers.StaffParser;
-import com.ryan.unofficialhendrixapp.models.Staff;
-
-import java.util.ArrayList;
+import com.ryan.unofficialhendrixapp.services.StaffDatabaseService;
 
 public class ByDeptFragment extends BaseByCategoryFragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private final String LOG_TAG = getClass().getSimpleName();
 
 
-    private static final String[] DEPARTMENT_COLUMNS = {
+    public static final String[] DEPARTMENT_COLUMNS = {
             HendrixContract.StaffColumn._ID,
             HendrixContract.StaffColumn.COLUMN_DEPARTMENT,
     };
@@ -41,13 +37,23 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new FillStaffTable(this).execute(DEPARTMENT_COLUMNS);
         setListAdapter( new ByDeptAdapter(getActivity(), null) );
+    }
+
+    private void setUpDatabase() {
+        Intent intent = new Intent(getActivity(), StaffDatabaseService.class);
+        StaffReceiver receiver = new StaffReceiver(new Handler(), this);
+        intent.putExtra(StaffDatabaseService.RECEIVER_KEY, receiver);
+        getActivity().getApplicationContext().startService(intent);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if ( getActivity().getPreferences(Preference.DEFAULT_ORDER).getBoolean("isFirstRun", true)) {
+            getActivity().getPreferences(Preference.DEFAULT_ORDER).edit().putBoolean("isFirstRun", false).apply();
+            setUpDatabase();
+        }
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -83,67 +89,20 @@ public class ByDeptFragment extends BaseByCategoryFragment implements LoaderMana
         ( (ByDeptAdapter) getListAdapter() ).swapCursor(null);
     }
 
-    private class FillStaffTable extends AsyncTask<String, Void, Boolean> {
+    private class StaffReceiver extends ResultReceiver {
+        private LoaderManager.LoaderCallbacks mCallback;
 
-        Fragment mFragment;
-
-        public FillStaffTable(Fragment fragment) {
-            mFragment = fragment;
+        public StaffReceiver(Handler handler, LoaderManager.LoaderCallbacks callback) {
+            super(handler);
+            mCallback = callback;
         }
 
         @Override
-        protected Boolean doInBackground(String... params) {
-            return canFillStaffTable(params) && fillStaffTable();
-        }
-
-        private boolean canFillStaffTable(String... params) {
-            Cursor c = getActivity().getContentResolver().query(HendrixContract.StaffColumn.CONTENT_URI,
-                    params, null, null, null);
-
-            if (c == null) {
-                return false;
-            } else {
-                boolean bool = c.moveToFirst();
-                c.close();
-                return bool;
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (isAdded()) {
+                getLoaderManager().restartLoader(0, null, mCallback);
             }
-        }
-
-        // returns true upon success, false otherwise
-        private boolean fillStaffTable() {
-            ArrayList<Staff> staffList = new StaffParser(getActivity()).parse();
-            if ( staffList.isEmpty() ) {
-                return false;
-            }
-            addToDatabase(staffList);
-            return true;
-        }
-
-        private void addToDatabase( ArrayList<Staff> staffList) {
-            ContentValues values;
-
-            getActivity().getContentResolver().delete(HendrixContract.StaffColumn.CONTENT_URI, null, null);
-            for ( Staff staff : staffList) {
-                values = new ContentValues();
-                values.put(StaffColumn.COLUMN_PICTURE, staff.getLink());
-                values.put(StaffColumn.COLUMN_NAME, staff.getName());
-                values.put(StaffColumn.COLUMN_TITLE, staff.getTitle());
-                values.put(StaffColumn.COLUMN_DEPARTMENT, staff.getDept());
-                values.put(StaffColumn.COLUMN_PHONE, staff.getPhone());
-                values.put(StaffColumn.COLUMN_EMAIL, staff.getEmail());
-                values.put(StaffColumn.COLUMN_LOCATION_LINE_1, staff.getline1());
-                values.put(StaffColumn.COLUMN_LOCATION_LINE_2, staff.getline2());
-                mFragment.getActivity().getContentResolver().insert(HendrixContract.StaffColumn.CONTENT_URI, values);
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean bool) {
-            super.onPostExecute(bool);
-            if(bool) {
-                getLoaderManager().restartLoader(0, null, (LoaderManager.LoaderCallbacks) mFragment);
-            }
-            mFragment = null;
         }
     }
 }

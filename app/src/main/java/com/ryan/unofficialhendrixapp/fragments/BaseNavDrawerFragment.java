@@ -18,9 +18,4 @@ public abstract class BaseNavDrawerFragment extends Fragment {
         int name_pos = getArguments().getInt(NAV_DRAWER_KEY);
         getActivity().setTitle(getResources().getStringArray(R.array.drawer_names)[name_pos]);
     }
-
-    // TODO: Replace with better way to determine if the fragment contains a webview
-    public boolean isWebFragment() {
-        return getClass().getSimpleName().equals("WebFragment");
-    }
 }
