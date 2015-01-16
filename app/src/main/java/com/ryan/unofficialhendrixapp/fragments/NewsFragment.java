@@ -76,7 +76,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         ButterKnife.inject(this, rootView);
 
         setUpViews();
-
         refresh(false);
         getLoaderManager().initLoader(0, null, this);
         setHasOptionsMenu(true);
@@ -98,10 +97,8 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     private void refresh(boolean forceRefresh) {
         mSwipeRefreshLayout.setRefreshing(forceRefresh);
         Intent intent = new Intent(getActivity(), NewsRefreshService.class);
-
         intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
         intent.putExtra(NewsRefreshService.FORCE_NEWS_REFRESH_KEY, forceRefresh);
-
         getActivity().startService(intent);
     }
 

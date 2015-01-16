@@ -82,10 +82,10 @@ public class WebFragment extends BaseNavDrawerFragment {
     }
 
     public boolean canGoBack() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            return true;
-        }
-        return false;
+        return mWebView.canGoBack();
+    }
+
+    public void onBackPressed() {
+        mWebView.goBack();
     }
 }

@@ -46,13 +46,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setUpActionBar() {
-        mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void setUpNavDrawer() {
+        mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         String[] drawerItems = getResources().getStringArray(R.array.drawer_names);
         ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.activity_main_drawer_item, R.id.drawer_item, drawerItems);
         mDrawerView.setAdapter(navDrawerAdapter);
@@ -101,15 +101,14 @@ public class MainActivity extends ActionBarActivity {
         mActionBarToggle.syncState();
     }
 
-    // Hacky way of checking if the current fragment is a web fragment and pressing back should
-    // go back in the webview or perform just a regular back where it pops the backstack
     @Override
     public void onBackPressed() {
         BaseNavDrawerFragment frag = (BaseNavDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-        if (frag != null && frag.isWebFragment() && ((WebFragment) frag).canGoBack()) {
-            return;
+        if (frag instanceof WebFragment && ((WebFragment) frag).canGoBack()) {
+            ((WebFragment) frag).onBackPressed();
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     private class DrawerItemClickListener implements AdapterView.OnItemClickListener {

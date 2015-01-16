@@ -30,7 +30,7 @@ public class NewsRefreshService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if ( canFillNewsDb(intent.getBooleanExtra(FORCE_NEWS_REFRESH_KEY, false)) ) {
             fillNewsDb();
-            ((ResultReceiver) intent.getParcelableExtra(RECEIVER_KEY)).send(0, null);
+            ((ResultReceiver) intent.getParcelableExtra(RECEIVER_KEY)).send(0, null); // notifies NewsFragment done
         }
     }
 
