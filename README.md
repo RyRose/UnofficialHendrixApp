@@ -1,3 +1,5 @@
-This is my attempt at making an Android application for Hendrix College.
+Hendrix College News and Information
+=
+An unofficial Android application for students to view the news, campus map, a directory of the Hendrix College staff, and the online Campus Web service all in one simple app. 
 
-This project is just for me to learn how to program Android apps.
+DISCLAIMER: This is currently a work-in-progress and not an official app. It was developed by a student on campus.
