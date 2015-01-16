@@ -20,6 +20,7 @@
         <item>News</item>
         <item>Staff Directory</item>
         <item>Campus Web</item>
+        <item>Campus Map</item>
     </string-array>
 
     <string name="title_activity_searchable" translatable="false">SearchableActivity</string>

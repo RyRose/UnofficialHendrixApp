@@ -18,6 +18,7 @@ import com.ryan.unofficialhendrixapp.fragments.BaseNavDrawerFragment;
 import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
 import com.ryan.unofficialhendrixapp.fragments.TabbedStaffFragment;
 import com.ryan.unofficialhendrixapp.fragments.WebFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff.MapFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,6 +27,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int NEWS_LOCATION = 0;
     private static final int STAFF_DIRECTORY_LOCATION = 1;
     private static final int CAMPUS_WEB_LOCATION = 2;
+    private static final int CAMPUS_MAP_LOCATION = 3;
 
     @InjectView(R.id.left_drawer) ListView mDrawerView;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
@@ -125,6 +127,9 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case CAMPUS_WEB_LOCATION:
                     fragment = WebFragment.newInstance(position);
+                    break;
+                case CAMPUS_MAP_LOCATION:
+                    fragment = MapFragment.newInstance(position);
                     break;
                 default:
                     throw new IllegalArgumentException("Option not accounted for in Nav Drawer");
