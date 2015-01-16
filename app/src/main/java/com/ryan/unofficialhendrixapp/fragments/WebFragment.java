@@ -1,9 +1,13 @@
 package com.ryan.unofficialhendrixapp.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -33,6 +37,7 @@ public class WebFragment extends BaseNavDrawerFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -50,9 +55,12 @@ public class WebFragment extends BaseNavDrawerFragment {
     }
 
     private void setUpWebView(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT <= 18)
+            mWebView.getSettings().setSavePassword(false);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSupportZoom(true);
+        mWebView.getSettings().setSaveFormData(false);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         mWebView.setScrollbarFadingEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
@@ -70,6 +78,14 @@ public class WebFragment extends BaseNavDrawerFragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            refresh();
+        }
+    }
+
     private void refresh() {
         mSwipeRefreshLayout.setRefreshing(true);
         mWebView.reload();
@@ -79,6 +95,21 @@ public class WebFragment extends BaseNavDrawerFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mWebView.saveState(outState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_web, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            refresh();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public boolean canGoBack() {
