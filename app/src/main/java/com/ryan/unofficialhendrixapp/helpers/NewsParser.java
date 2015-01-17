@@ -10,95 +10,73 @@ import com.ryan.unofficialhendrixapp.models.NewsEntry;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class NewsParser extends BaseParser {
 
     private final String LOG_TAG = getClass().getSimpleName();
+    private XmlPullParser mParser;
     private Context mContext;
 
     public NewsParser( Context context) {
         mContext = context;
     }
 
-    public ArrayList<NewsEntry> getNewsEntryList() {
-        InputStream inputStream;
-        XmlPullParser parser;
-        ArrayList<NewsEntry> newsEntryList = new ArrayList<NewsEntry>();
+    @Override
+    public XmlPullParser getParser() {
+        return  mParser;
+    }
 
-        if ( (inputStream = getRSSStream()) == null) {
-            return newsEntryList;
-        }
+    public ArrayList<NewsEntry> getList() {
+        String [] keys = mContext.getResources().getStringArray(R.array.rss_keys);
+        ArrayList<NewsEntry> newsEntryList = new ArrayList<>();
 
         try {
-            parser = Xml.newPullParser();
-            parser.setInput(inputStream, null);
-            parser.nextTag();
-            parser.require( XmlPullParser.START_TAG, null, mContext.getResources().getStringArray(R.array.rss_keys)[0]);
-
-            while (parser.next() != XmlPullParser.END_DOCUMENT) {
-                if (parser.getEventType() != XmlPullParser.START_TAG) {
+            setUpParser();
+            while (mParser.next() != XmlPullParser.END_DOCUMENT) {
+                if (mParser.getEventType() != XmlPullParser.START_TAG) {
                     continue;
                 }
-                String name = parser.getName();
-                if (name.equals( mContext.getResources().getStringArray(R.array.rss_keys)[2] )) {
-                    newsEntryList.add(getEntry(parser));
+                String name = mParser.getName();
+                if (name.equals( keys[2] )) {
+                    String [] entry = getEntry(Arrays.copyOfRange(keys, 2, keys.length));
+                    newsEntryList.add( new NewsEntry(entry) );
                 }
             }
 
         } catch ( IOException | XmlPullParserException e ) {
             Log.v(LOG_TAG, "RSS link stopped working: " + e.getMessage());
-            return new ArrayList<NewsEntry>();
-        } finally {
-            Utility.closeInputStream( inputStream );
+            return new ArrayList<>();
         }
 
         return newsEntryList;
     }
 
-    private NewsEntry getEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String item_key = mContext.getResources().getStringArray(R.array.rss_keys)[2];
-        String title_key = mContext.getResources().getStringArray(R.array.rss_keys)[3];
-        String link_key = mContext.getResources().getStringArray(R.array.rss_keys)[4];
-        String description_key = mContext.getResources().getStringArray(R.array.rss_keys)[5];
-        String pubDate_key = mContext.getResources().getStringArray(R.array.rss_keys)[6];
-        String name;
-        String title = "";
-        String link = "";
-        String description = "";
-        String date = "";
-
-        parser.require(XmlPullParser.START_TAG, null, item_key);
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-
-            name = parser.getName();
-            if      ( name.equals(title_key))       title = readCategory(parser, title_key);
-            else if ( name.equals(link_key))        link = readCategory(parser, link_key);
-            else if ( name.equals(description_key)) description = readCategory(parser, description_key);
-            else if ( name.equals(pubDate_key))     date = readCategory(parser, pubDate_key);
-            else skip(parser);
-
-        }
-        return new NewsEntry(title, link, description, date.substring(0, 16));
+    private void setUpParser() throws IOException, XmlPullParserException  {
+        mParser = Xml.newPullParser();
+        mParser.setInput( new StringReader( getRSSStream()));
+        mParser.nextTag();
+        mParser.require(XmlPullParser.START_TAG, null, mContext.getResources().getStringArray(R.array.rss_keys)[0]);
     }
 
-    private InputStream getRSSStream() {
-        URL url;
-        InputStream inputStream;
-        try {
-            url = new URL(mContext.getResources().getString(R.string.rss_url));
-            inputStream = url.openStream();
-        } catch (IOException e) {
-            inputStream = null;
-            Log.v(LOG_TAG, "Site not available or RSS link down: " + e.getMessage());
+    private String getRSSStream() throws IOException {
+        URL url = new URL(mContext.getResources().getString(R.string.rss_url));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        BufferedReader reader = new BufferedReader( new InputStreamReader(connection.getInputStream()));
+        StringBuilder builder = new StringBuilder();
+        String line;
+        while ( (line = reader.readLine()) != null) {
+            builder.append(line).append("\n");
         }
-        return inputStream;
+        reader.close();
+        connection.disconnect();
+        return builder.toString();
     }
 }

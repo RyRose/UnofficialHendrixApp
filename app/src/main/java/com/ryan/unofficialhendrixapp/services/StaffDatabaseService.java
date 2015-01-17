@@ -31,7 +31,7 @@ public class StaffDatabaseService extends IntentService {
 
     // returns true upon success, false otherwise
     private boolean didFillStaffTable() {
-        ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).parse();
+        ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).getList();
         if ( staffList.isEmpty() ) {
             return false;
         }

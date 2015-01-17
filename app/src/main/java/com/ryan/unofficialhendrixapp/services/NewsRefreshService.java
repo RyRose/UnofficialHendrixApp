@@ -48,7 +48,7 @@ public class NewsRefreshService extends IntentService {
 
     private void fillNewsDb() {
         ContentValues row;
-        ArrayList<NewsEntry> newsEntryList = new NewsParser(getApplicationContext()).getNewsEntryList();
+        ArrayList<NewsEntry> newsEntryList = new NewsParser(getApplicationContext()).getList();
 
         getContentResolver().delete(HendrixContract.NewsColumn.CONTENT_URI, null, null);
         for ( NewsEntry entry : newsEntryList ) {

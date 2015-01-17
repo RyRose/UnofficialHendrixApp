@@ -36,7 +36,8 @@ public class StaffGridAdapter extends CursorAdapter {
         final ViewHolder holder = (ViewHolder) view.getTag();
         holder.textView.setText(cursor.getString(StaffGridFragment.COL_GRID_NAME));
 
-        Picasso.with(context).load(cursor.getString(StaffGridFragment.COL_GRID_PIC))
+        String picture = cursor.getString(StaffGridFragment.COL_GRID_PIC);
+        Picasso.with(context).load(picture)
                 .fit().centerCrop().into(holder.imageView, new Callback() {
             @Override
             public void onSuccess() {}

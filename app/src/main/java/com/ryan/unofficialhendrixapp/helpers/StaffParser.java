@@ -13,89 +13,52 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class StaffParser extends BaseParser{
+public class StaffParser extends BaseParser {
     private final String LOG_TAG = getClass().getSimpleName();
 
     private Context mContext;
+    XmlResourceParser mParser;
 
     public StaffParser(Context context) {
         mContext = context;
     }
 
-    public ArrayList<Staff> parse() {
-        XmlResourceParser parser = mContext.getResources().getXml(R.xml.staff);
-        ArrayList<Staff> staffList = new ArrayList<Staff>();
+    @Override
+    public XmlPullParser getParser() {
+        return mParser;
+    }
+
+    public ArrayList<Staff> getList() {
+        String [] keys = mContext.getResources().getStringArray(R.array.dir_keys);
+        ArrayList<Staff> staffList = new ArrayList<>();
 
         try {
-            parser.next();
-            parser.nextTag();
-            parser.require( XmlPullParser.START_TAG, null, mContext.getResources().getStringArray(R.array.dir_keys)[0]);
-
-            while (parser.next() != XmlPullParser.END_DOCUMENT) {
-                if (parser.getEventType() != XmlPullParser.START_TAG) {
+            setUpParser();
+            while ( mParser.next() != XmlPullParser.END_DOCUMENT ) {
+                if (mParser.getEventType() != XmlPullParser.START_TAG) {
                     continue;
                 }
-                String name = parser.getName();
-                if (name.equals( mContext.getResources().getStringArray(R.array.dir_keys)[1] )) {
-                    staffList.add(getEntry(parser));
+                String name = mParser.getName();
+                if (name.equals( keys[1] )) {
+                    String [] entry = getEntry(Arrays.copyOfRange(keys, 1, keys.length));
+                    staffList.add( new Staff(entry) );
                 }
             }
 
         } catch ( IOException | XmlPullParserException e ) {
             Log.e(LOG_TAG, "Cannot access data: " + e.getMessage());
-            e.printStackTrace();
-            staffList = new ArrayList<Staff>();
+            staffList = new ArrayList<>();
         }
 
         return staffList;
     }
 
-    private Staff getEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        String item_key  = mContext.getResources().getStringArray(R.array.dir_keys)[1];
-        String link_key  = mContext.getResources().getStringArray(R.array.dir_keys)[2];
-        String name_key  = mContext.getResources().getStringArray(R.array.dir_keys)[3];
-        String title_key = mContext.getResources().getStringArray(R.array.dir_keys)[4];
-        String dept_key  = mContext.getResources().getStringArray(R.array.dir_keys)[5];
-        String phone_key = mContext.getResources().getStringArray(R.array.dir_keys)[6];
-        String email_key = mContext.getResources().getStringArray(R.array.dir_keys)[7];
-        String line1_key = mContext.getResources().getStringArray(R.array.dir_keys)[8];
-        String line2_key = mContext.getResources().getStringArray(R.array.dir_keys)[9];
-
-        String tag_name;
-        String link = "";
-        String name = "";
-        String title = "";
-        String dept = "";
-        String phone = "";
-        String email = "";
-        String line1 = "";
-        String line2 = "";
-
-        parser.require(XmlPullParser.START_TAG, null, item_key);
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-
-            tag_name = parser.getName();
-            if      (tag_name.equals(link_key) ) link = readCategory(parser, link_key);
-            else if (tag_name.equals(name_key) ) name = readCategory(parser, name_key);
-            else if (tag_name.equals(title_key)) title = readCategory(parser, title_key);
-            else if (tag_name.equals(dept_key) ) {
-                dept = readCategory(parser, dept_key);
-                if ( dept.isEmpty() ) {
-                    dept = "Other";
-                }
-            }
-            else if (tag_name.equals(phone_key)) phone = readCategory(parser, phone_key);
-            else if (tag_name.equals(email_key)) email = readCategory(parser, email_key);
-            else if (tag_name.equals(line1_key)) line1 = readCategory(parser, line1_key);
-            else if (tag_name.equals(line2_key)) line2 = readCategory(parser, line2_key);
-            else skip(parser);
-
-        }
-        return new Staff(link, name, title, dept, phone, email, line1, line2);
+    private void setUpParser() throws IOException, XmlPullParserException{
+        mParser = mContext.getResources().getXml(R.xml.staff);
+        mParser.next();
+        mParser.nextTag();
+        mParser.require(XmlPullParser.START_TAG, null, mContext.getResources().getStringArray(R.array.dir_keys)[0]);
     }
 }

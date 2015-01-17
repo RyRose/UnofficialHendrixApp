@@ -16,7 +16,14 @@ public class NewsEntry {
         this.title = title;
         this.link = link;
         this.description = description;
-        this.date = date;
+        this.date = date.substring(0, 16);
+    }
+
+    public NewsEntry(String [] attributes) {
+        this.title = attributes[0];
+        this.link = attributes[1];
+        this.description = attributes[2];
+        this.date = attributes[3].substring(0, 16);
     }
 
     public String getTitle() {
