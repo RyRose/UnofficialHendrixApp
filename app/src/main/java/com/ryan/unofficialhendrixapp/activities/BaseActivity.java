@@ -1,31 +1,24 @@
 package com.ryan.unofficialhendrixapp.activities;
 
-import android.app.ListActivity;
-import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ryan.unofficialhendrixapp.R;
 
-public class SearchableActivity extends ListActivity {
+public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searchable);
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doMySearch(query);
-        }
+        setUpActionBar();
     }
 
-
-    private void doMySearch( String query ) {
-
+    private void setUpActionBar() {
+        getSupportActionBar().setElevation(0);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -38,7 +31,8 @@ public class SearchableActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            // TODO: Opens up the about menu
             return true;
         }
 

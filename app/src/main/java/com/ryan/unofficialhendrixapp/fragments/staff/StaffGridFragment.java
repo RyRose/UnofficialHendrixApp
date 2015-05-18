@@ -119,13 +119,11 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
 
         switch( id ) {
             case DEPT_LOADER:
-                selection = HendrixContract.StaffColumn.COLUMN_DEPARTMENT
-                        + " == ?";
+                selection = HendrixContract.StaffColumn.COLUMN_DEPARTMENT + " == ?";
                 selectionArgs = new String[]{mDept};
                 break;
             case LETTER_LOADER:
-                selection = "substr(" + HendrixContract.StaffColumn.COLUMN_NAME +
-                        ", 1, 1) == ?";
+                selection = "substr(" + HendrixContract.StaffColumn.COLUMN_NAME + ", 1, 1) == ?";
                 selectionArgs = new String[]{mLetter};
                 break;
             default:

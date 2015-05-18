@@ -16,6 +16,7 @@ public class HendrixDbHelper extends SQLiteOpenHelper {
         super(context, NAME, null, VERSION);
     }
 
+    @Override
     public void onCreate(SQLiteDatabase db) {
 
         final String CREATE_NEWS_TABLE = "CREATE TABLE " + NewsColumn.TABLE_NAME +

@@ -45,14 +45,14 @@ public class StaffDatabaseService extends IntentService {
         getContentResolver().delete(HendrixContract.StaffColumn.CONTENT_URI, null, null);
         for ( Staff staff : staffList) {
             values = new ContentValues();
-            values.put(HendrixContract.StaffColumn.COLUMN_PICTURE, staff.getLink());
-            values.put(HendrixContract.StaffColumn.COLUMN_NAME, staff.getName());
-            values.put(HendrixContract.StaffColumn.COLUMN_TITLE, staff.getTitle());
-            values.put(HendrixContract.StaffColumn.COLUMN_DEPARTMENT, staff.getDept());
-            values.put(HendrixContract.StaffColumn.COLUMN_PHONE, staff.getPhone());
-            values.put(HendrixContract.StaffColumn.COLUMN_EMAIL, staff.getEmail());
-            values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_1, staff.getline1());
-            values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_2, staff.getline2());
+            values.put(HendrixContract.StaffColumn.COLUMN_PICTURE, staff.link);
+            values.put(HendrixContract.StaffColumn.COLUMN_NAME, staff.name);
+            values.put(HendrixContract.StaffColumn.COLUMN_TITLE, staff.title);
+            values.put(HendrixContract.StaffColumn.COLUMN_DEPARTMENT, staff.dept);
+            values.put(HendrixContract.StaffColumn.COLUMN_PHONE, staff.phone);
+            values.put(HendrixContract.StaffColumn.COLUMN_EMAIL, staff.email);
+            values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_1, staff.location_line_1);
+            values.put(HendrixContract.StaffColumn.COLUMN_LOCATION_LINE_2, staff.location_line_2);
             getContentResolver().insert(HendrixContract.StaffColumn.CONTENT_URI, values);
         }
     }

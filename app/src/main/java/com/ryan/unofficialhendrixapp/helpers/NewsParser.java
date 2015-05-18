@@ -52,7 +52,7 @@ public class NewsParser extends BaseParser {
             }
 
         } catch ( IOException | XmlPullParserException e ) {
-            Log.v(LOG_TAG, "RSS link stopped working: " + e.getMessage());
+            Log.e(LOG_TAG, "RSS link stopped working: " + e.getMessage());
             return new ArrayList<>();
         }
 

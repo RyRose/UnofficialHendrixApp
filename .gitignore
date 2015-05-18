@@ -1,4 +1,4 @@
-lt application files
+# lt application files
 *.apk
 *.ap_
 
@@ -28,6 +28,7 @@ local.properties
 # the project can be imported from settings.gradle
 .idea
 *.iml
+.idea/
 
 # Old-style IDEA project files
 *.ipr

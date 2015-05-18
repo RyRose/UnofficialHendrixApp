@@ -14,9 +14,6 @@ import com.ryan.unofficialhendrixapp.models.NewsEntry;
 
 import java.util.ArrayList;
 
-/**
- * Created by ryan on 1/12/15.
- */
 public class NewsRefreshService extends IntentService {
     public static final String FORCE_NEWS_REFRESH_KEY = "news_service_key";
     public static final String RECEIVER_KEY = "news_receiver_key";
@@ -51,12 +48,13 @@ public class NewsRefreshService extends IntentService {
         ArrayList<NewsEntry> newsEntryList = new NewsParser(getApplicationContext()).getList();
 
         getContentResolver().delete(HendrixContract.NewsColumn.CONTENT_URI, null, null);
+
         for ( NewsEntry entry : newsEntryList ) {
             row = new ContentValues();
-            row.put( HendrixContract.NewsColumn.COLUMN_TITLE, entry.getTitle());
-            row.put( HendrixContract.NewsColumn.COLUMN_DESCRIPTION, entry.getDescription());
-            row.put( HendrixContract.NewsColumn.COLUMN_DATE, entry.getDate());
-            row.put( HendrixContract.NewsColumn.COLUMN_LINK, entry.getLink());
+            row.put( HendrixContract.NewsColumn.COLUMN_TITLE, entry.title);
+            row.put( HendrixContract.NewsColumn.COLUMN_DESCRIPTION, entry.description);
+            row.put( HendrixContract.NewsColumn.COLUMN_DATE, entry.date);
+            row.put( HendrixContract.NewsColumn.COLUMN_LINK, entry.link);
             getContentResolver().insert(HendrixContract.NewsColumn.CONTENT_URI, row);
         }
     }

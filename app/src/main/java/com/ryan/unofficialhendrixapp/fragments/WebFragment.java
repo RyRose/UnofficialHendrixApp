@@ -63,7 +63,7 @@ public class WebFragment extends BaseNavDrawerFragment {
         mWebView.getSettings().setSaveFormData(false);
         mWebView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         mWebView.setScrollbarFadingEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient() {
+        mWebView.setWebViewClient( new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);

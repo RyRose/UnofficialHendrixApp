@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.staff;
+package com.ryan.unofficialhendrixapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.joanzapata.pdfview.PDFView;
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.BaseNavDrawerFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
