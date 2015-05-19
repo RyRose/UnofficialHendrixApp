@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.NewsFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,14 +20,12 @@ public class NewsAdapter extends CursorAdapter {
         super(context, c, false);
     }
 
-    // TODO: Implement different layout for first entry of the ListView
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         ViewHolder holder;
         View view;
         int layoutId;
 
-        // layoutId = ( cursor.getPosition() == 0) ? R.layout.fragment_news_list_item_recent : R.layout.fragment_news_list_item;
         layoutId = R.layout.fragment_news_list_item;
         view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         holder = new ViewHolder(view);

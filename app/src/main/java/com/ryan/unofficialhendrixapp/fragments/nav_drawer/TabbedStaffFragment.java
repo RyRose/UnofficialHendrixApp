@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments;
+package com.ryan.unofficialhendrixapp.fragments.nav_drawer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.nav_drawer.BaseNavDrawerFragment;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByDeptFragment;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByLetterFragment;
 

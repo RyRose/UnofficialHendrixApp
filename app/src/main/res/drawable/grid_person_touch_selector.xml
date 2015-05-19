@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true"
-        android:drawable="@color/orange" />
+        android:drawable="@color/darker_transparent_black" />
 
-    <item android:drawable="@color/hendrix_orange" />
+    <item android:drawable="@color/transparent_black" />
 </selector>

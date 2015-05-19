@@ -12,11 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.BaseNavDrawerFragment;
-import com.ryan.unofficialhendrixapp.fragments.MapFragment;
-import com.ryan.unofficialhendrixapp.fragments.NewsFragment;
-import com.ryan.unofficialhendrixapp.fragments.TabbedStaffFragment;
-import com.ryan.unofficialhendrixapp.fragments.WebFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.BaseNavDrawerFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.MapFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.NewsFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.TabbedStaffFragment;
+import com.ryan.unofficialhendrixapp.fragments.nav_drawer.WebFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

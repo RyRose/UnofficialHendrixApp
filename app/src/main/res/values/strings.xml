@@ -10,7 +10,11 @@
     <string name="phone_staff">Phone:</string>
     <string name="image_description_staff">An image of the staff member selected</string>
     <string name="staff_search_hint">Search staff and faculty members</string>
-
+    <string name="staff_database_error">Can\'t access staff directory</string>
+    <string name="news_refresh_error">Website not available</string>
+    <string name="about_title">About this app</string>
+    <string name="about_content">This app is entirely unofficial and was developed by a Hendrix student!\n\nIf you wish to contribute, check out https://github.com/RyRose/UnofficialHendrixApp.\n\nPlease contact the developer through Google Play or GitHub if you have any questions and/or suggestions.</string>
+    <string name="dialog_close">Close</string>
     <string-array name="tab_names">
         <item>By Department</item>
         <item>By Letter</item>
@@ -25,6 +29,7 @@
 
     <string name="rss_url" translatable="false">https://www.hendrix.edu/news/RssFeed.ashx?fol=235</string>
     <string name="campus_web_url" translatable="false">http://hendrix.edu/CampusWeb</string>
+    <string name="prefs" translatable="false">HendrixPrefsFile</string>
 
     <string-array name="rss_keys" translatable="false">
         <item>rss</item>

@@ -9,7 +9,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.staff.ByDeptFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByDeptFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

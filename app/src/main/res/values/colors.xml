@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="orange">#FF5722</color>
-    <color name="dark_orange">#E64A19</color>
+    <color name="dark_orange">#ba550c</color>
     <color name="hendrix_orange">#E96B10</color>
     <color name="light_orange">#FFCCBC</color>
     <color name="blue">#448AFF</color>
@@ -11,4 +11,8 @@
     <color name="white">#FFFFFF</color>
     <color name="light_grey">#B6B6B6</color>
     <color name="very_light_grey">#d3d3d3</color>
+
+    <color name="transparent_black">#7F000000</color>
+    <color name="darker_transparent_black">#AF000000</color>
+    <color name="transparent_orange">#9FE96B10</color>
 </resources>

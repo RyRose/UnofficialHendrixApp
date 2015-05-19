@@ -1,6 +1,8 @@
-package com.ryan.unofficialhendrixapp.fragments;
+package com.ryan.unofficialhendrixapp.fragments.nav_drawer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,12 +75,17 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Icepick.restoreInstanceState(this, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.inject(this, rootView);
+        Icepick.restoreInstanceState(this, savedInstanceState);
 
         setUpViews();
-        refresh(false);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
+        boolean isFirstNewsPull = prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
+        if (isFirstNewsPull)
+            refresh();
+
         getLoaderManager().initLoader(0, null, this);
         setHasOptionsMenu(true);
         return rootView;
@@ -86,20 +94,27 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     private void setUpViews() {
         mListView.setAdapter(mNewsAdapter);
         mListView.setSelection(mPosition);
-        mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh(true);
+                refresh();
             }
         });
     }
 
-    private void refresh(boolean forceRefresh) {
-        mSwipeRefreshLayout.setRefreshing(forceRefresh);
+    private void refresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
         Intent intent = new Intent(getActivity(), NewsRefreshService.class);
         intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
-        intent.putExtra(NewsRefreshService.FORCE_NEWS_REFRESH_KEY, forceRefresh);
         getActivity().startService(intent);
+    }
+
+    @Override
+    public void onPause() { // TODO: Bug- User refreshes and quickly switches. A hacky fix is to setAdapter to null but find something better.
+        super.onPause();
+        mSwipeRefreshLayout.setRefreshing(false);
+        mReceiver.disable();
+        mListView.setAdapter(null);
     }
 
     @Override
@@ -125,27 +140,17 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean isOptionSelected = true;
         switch(item.getItemId()) {
             case R.id.action_refresh:
-                refresh(true);
-                break;
-            default:
-                isOptionSelected = false;
+                refresh();
+                return true;
         }
-        return isOptionSelected;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                getActivity(),
-                NewsColumn.CONTENT_URI,
-                NEWS_COLUMNS,
-                null,
-                null,
-                null
-        );
+        return new CursorLoader( getActivity(), NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null);
     }
 
     @Override
@@ -160,6 +165,19 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     private class NewsReceiver extends ResultReceiver {
         private LoaderManager.LoaderCallbacks mCallback;
+        private boolean isEnabled = true;
+
+        public void enable() {
+            isEnabled = true;
+        }
+
+        public void disable() {
+            isEnabled = false;
+        }
+
+        private boolean isEnabled() {
+            return isEnabled;
+        }
 
         public NewsReceiver(Handler handler, LoaderManager.LoaderCallbacks callback) {
             super(handler);
@@ -169,10 +187,12 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
-            if (isAdded()) {
+            if (isEnabled) {
+                Log.d(LOG_TAG, "loader in news");
                 getLoaderManager().restartLoader(0, null, mCallback);
-                mSwipeRefreshLayout.setRefreshing(false);
             }
+
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 }

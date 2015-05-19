@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.staff.StaffGridFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffGridFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

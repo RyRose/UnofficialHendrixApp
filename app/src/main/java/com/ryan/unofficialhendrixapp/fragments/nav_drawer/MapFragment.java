@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments;
+package com.ryan.unofficialhendrixapp.fragments.nav_drawer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +12,6 @@ import com.ryan.unofficialhendrixapp.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by ryan on 1/15/15.
- */
 public class MapFragment extends BaseNavDrawerFragment {
 
     public static MapFragment newInstance(int position) {

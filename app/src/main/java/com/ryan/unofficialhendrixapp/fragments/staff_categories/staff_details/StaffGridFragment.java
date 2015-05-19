@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.staff;
+package com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details;
 
 import android.app.Activity;
 import android.database.Cursor;

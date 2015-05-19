@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.staff;
+package com.ryan.unofficialhendrixapp.fragments.staff_categories;
 
 import android.content.Intent;
 import android.os.Bundle;

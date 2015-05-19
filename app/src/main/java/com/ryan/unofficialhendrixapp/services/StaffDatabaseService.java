@@ -3,20 +3,22 @@ package com.ryan.unofficialhendrixapp.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.os.ResultReceiver;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.data.HendrixContract;
 import com.ryan.unofficialhendrixapp.helpers.StaffParser;
 import com.ryan.unofficialhendrixapp.models.Staff;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by ryan on 1/15/15.
- */
 public class StaffDatabaseService extends IntentService {
     private static final String LOG_TAG = "StaffDatabaseService";
-    public static final String RECEIVER_KEY = "staff_receiver_key";
+    public static final String INITIAL_STAFF_FILL_KEY = "isFirstRun";
 
     public StaffDatabaseService() {
         super(LOG_TAG);
@@ -24,19 +26,14 @@ public class StaffDatabaseService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if ( didFillStaffTable() ) {
-            ((ResultReceiver) intent.getParcelableExtra(RECEIVER_KEY)).send(0, null); // notifies ByDept done
+        try {
+            ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).getList();
+            addToDatabase(staffList);
+            getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE).edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
+            Log.d(LOG_TAG, "finished pulling staff");
+        } catch (XmlPullParserException | IOException e) {
+            Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show();
         }
-    }
-
-    // returns true upon success, false otherwise
-    private boolean didFillStaffTable() {
-        ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).getList();
-        if ( staffList.isEmpty() ) {
-            return false;
-        }
-        addToDatabase(staffList);
-        return true;
     }
 
     private void addToDatabase( ArrayList<Staff> staffList) {

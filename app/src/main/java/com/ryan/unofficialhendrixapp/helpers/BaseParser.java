@@ -1,5 +1,7 @@
 package com.ryan.unofficialhendrixapp.helpers;
 
+import android.content.Context;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -9,6 +11,12 @@ public abstract class BaseParser {
     protected abstract XmlPullParser getParser();
 
     private final String LOG_TAG = getClass().getSimpleName();
+
+    protected Context mContext;
+
+    public BaseParser(Context context){
+        mContext = context;
+    }
 
     protected String [] getEntry(String [] keys) throws XmlPullParserException, IOException {
 

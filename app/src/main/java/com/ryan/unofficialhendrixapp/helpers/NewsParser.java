@@ -1,7 +1,6 @@
 package com.ryan.unofficialhendrixapp.helpers;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
 
 import com.ryan.unofficialhendrixapp.R;
@@ -23,10 +22,9 @@ public class NewsParser extends BaseParser {
 
     private final String LOG_TAG = getClass().getSimpleName();
     private XmlPullParser mParser;
-    private Context mContext;
 
     public NewsParser( Context context) {
-        mContext = context;
+        super(context);
     }
 
     @Override
@@ -34,26 +32,20 @@ public class NewsParser extends BaseParser {
         return  mParser;
     }
 
-    public ArrayList<NewsEntry> getList() {
+    public ArrayList<NewsEntry> getList() throws IOException, XmlPullParserException {
         String [] keys = mContext.getResources().getStringArray(R.array.rss_keys);
         ArrayList<NewsEntry> newsEntryList = new ArrayList<>();
 
-        try {
-            setUpParser();
-            while (mParser.next() != XmlPullParser.END_DOCUMENT) {
-                if (mParser.getEventType() != XmlPullParser.START_TAG) {
-                    continue;
-                }
-                String name = mParser.getName();
-                if (name.equals( keys[2] )) {
-                    String [] entry = getEntry(Arrays.copyOfRange(keys, 2, keys.length));
-                    newsEntryList.add( new NewsEntry(entry) );
-                }
+        setUpParser();
+        while (mParser.next() != XmlPullParser.END_DOCUMENT) {
+            if (mParser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
             }
-
-        } catch ( IOException | XmlPullParserException e ) {
-            Log.e(LOG_TAG, "RSS link stopped working: " + e.getMessage());
-            return new ArrayList<>();
+            String name = mParser.getName();
+            if (name.equals(keys[2])) {
+                String[] entry = getEntry(Arrays.copyOfRange(keys, 2, keys.length));
+                newsEntryList.add(new NewsEntry(entry));
+            }
         }
 
         return newsEntryList;

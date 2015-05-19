@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments;
+package com.ryan.unofficialhendrixapp.fragments.nav_drawer;
 
 import android.os.Build;
 import android.os.Bundle;

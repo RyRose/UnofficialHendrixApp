@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.staff.StaffDetailFragment;
-import com.ryan.unofficialhendrixapp.fragments.staff.StaffGridFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffDetailFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffGridFragment;
 
 public class StaffDetailActivity extends BaseActivity implements StaffGridFragment.OnPersonSelectedListener{
     private final String LOG_TAG = getClass().getSimpleName();

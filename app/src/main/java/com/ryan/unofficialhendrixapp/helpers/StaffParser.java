@@ -3,7 +3,6 @@ package com.ryan.unofficialhendrixapp.helpers;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.util.Log;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.models.Staff;
@@ -18,11 +17,10 @@ import java.util.Arrays;
 public class StaffParser extends BaseParser {
     private final String LOG_TAG = getClass().getSimpleName();
 
-    private Context mContext;
     XmlResourceParser mParser;
 
     public StaffParser(Context context) {
-        mContext = context;
+        super(context);
     }
 
     @Override
@@ -30,26 +28,21 @@ public class StaffParser extends BaseParser {
         return mParser;
     }
 
-    public ArrayList<Staff> getList() {
+    public ArrayList<Staff> getList() throws IOException, XmlPullParserException {
         String [] keys = mContext.getResources().getStringArray(R.array.dir_keys);
         ArrayList<Staff> staffList = new ArrayList<>();
 
-        try {
-            setUpParser();
-            while ( mParser.next() != XmlPullParser.END_DOCUMENT ) {
-                if (mParser.getEventType() != XmlPullParser.START_TAG) {
-                    continue;
-                }
-                String name = mParser.getName();
-                if (name.equals( keys[1] )) {
-                    String [] entry = getEntry(Arrays.copyOfRange(keys, 1, keys.length));
-                    staffList.add( new Staff(entry) );
-                }
-            }
+        setUpParser();
 
-        } catch ( IOException | XmlPullParserException e ) {
-            Log.e(LOG_TAG, "Cannot access data: " + e.getMessage());
-            staffList = new ArrayList<>();
+        while (mParser.next() != XmlPullParser.END_DOCUMENT) {
+            if (mParser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = mParser.getName();
+            if (name.equals(keys[1])) {
+                String[] entry = getEntry(Arrays.copyOfRange(keys, 1, keys.length));
+                staffList.add(new Staff(entry));
+            }
         }
 
         return staffList;
