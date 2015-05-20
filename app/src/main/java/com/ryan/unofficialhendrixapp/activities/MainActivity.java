@@ -81,8 +81,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         BaseNavDrawerFragment frag = (BaseNavDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-        if (frag instanceof WebFragment && ((WebFragment) frag).canGoBack()) {
-            ((WebFragment) frag).onBackPressed();
+        if (frag.canGoBack()) {
+            frag.onBackPressed();
         } else {
             super.onBackPressed();
         }

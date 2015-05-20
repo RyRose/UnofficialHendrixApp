@@ -112,10 +112,12 @@ public class WebFragment extends BaseNavDrawerFragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public boolean canGoBack() {
         return mWebView.canGoBack();
     }
 
+    @Override
     public void onBackPressed() {
         mWebView.goBack();
     }

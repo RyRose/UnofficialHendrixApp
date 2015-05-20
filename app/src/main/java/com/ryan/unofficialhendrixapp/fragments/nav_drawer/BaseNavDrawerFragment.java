@@ -9,6 +9,9 @@ import com.ryan.unofficialhendrixapp.R;
 public abstract class BaseNavDrawerFragment extends Fragment {
     protected static final String NAV_DRAWER_KEY = "name_pos";
 
+    public boolean canGoBack() { return false;}
+    public void onBackPressed() {}
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

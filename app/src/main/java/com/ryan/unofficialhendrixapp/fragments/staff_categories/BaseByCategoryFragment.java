@@ -1,7 +1,6 @@
 package com.ryan.unofficialhendrixapp.fragments.staff_categories;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
 
 import icepick.Icepick;
@@ -18,8 +17,8 @@ public abstract class BaseByCategoryFragment extends ListFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         setSelection(mPosition);
     }
 

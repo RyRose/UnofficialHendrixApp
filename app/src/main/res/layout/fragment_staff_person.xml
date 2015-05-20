@@ -1,30 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
-
-    <ImageView
-        android:contentDescription="@string/image_description_staff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_ImageView"
-        android:scaleType="fitStart"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:minWidth="180dp"
-        android:minHeight="320dp"
-        android:maxHeight="320dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"/>
+    android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/person_line2View"
         android:layout_below="@+id/person_line1View"
-        android:layout_alignLeft="@+id/person_ImageView"
         android:textSize="16sp"
         android:layout_marginLeft="12dp"
         android:text="DWREY 414"/>
@@ -34,7 +17,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/person_line1View"
         android:layout_below="@+id/person_titleView"
-        android:layout_alignLeft="@+id/person_ImageView"
         android:textSize="16sp"
         android:layout_marginLeft="12dp"
         android:text="Biology Department"/>
@@ -43,9 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/person_nameView"
-        android:layout_below="@+id/person_ImageView"
-        android:layout_alignLeft="@+id/person_ImageView"
-        android:layout_alignStart="@+id/person_ImageView"
         android:textSize="22sp"
         android:textColor="@color/black"
         android:text="George Harper"/>

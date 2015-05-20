@@ -37,4 +37,6 @@ dependencies {
     compile 'com.jpardogo.materialtabstrip:library:1.0.7'
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.+@aar'
     compile 'com.afollestad:material-dialogs:0.7.4.1'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
 }

@@ -3,18 +3,20 @@ package com.ryan.unofficialhendrixapp.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.os.ResultReceiver;
 import android.widget.Toast;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
 import com.ryan.unofficialhendrixapp.helpers.NewsParser;
 import com.ryan.unofficialhendrixapp.models.NewsEntry;
+import com.ryan.unofficialhendrixapp.models.NewsEvent;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 public class NewsRefreshService extends IntentService {
     public static final String INITIAL_REFRESH_KEY = "initialNewsPull";
@@ -33,7 +35,7 @@ public class NewsRefreshService extends IntentService {
         } catch (IOException | XmlPullParserException e) {
             Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_SHORT).show();
         } finally {
-            ((ResultReceiver) intent.getParcelableExtra(RECEIVER_KEY)).send(0, null);
+            EventBus.getDefault().post(new NewsEvent());
         }
     }
 

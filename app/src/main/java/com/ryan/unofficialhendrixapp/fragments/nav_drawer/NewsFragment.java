@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -25,11 +22,13 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.adapters.NewsAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
+import com.ryan.unofficialhendrixapp.models.NewsEvent;
 import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
+import de.greenrobot.event.EventBus;
 import icepick.Icepick;
 import icepick.Icicle;
 
@@ -50,12 +49,12 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public static final int COL_NEWS_DATE = 3;
     public static final int COL_NEWS_LINK = 4;
 
-    private NewsReceiver mReceiver;
-
-
     @InjectView(R.id.fragment_news_listView) ListView mListView;
+
     @InjectView(R.id.fragment_news_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Icicle int mPosition = 0;
+
+    @Icicle
+    int mPosition;
     NewsAdapter mNewsAdapter;
 
     public static NewsFragment newInstance(int pos) {
@@ -70,7 +69,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
-        mReceiver = new NewsReceiver(new Handler(), this);
         mNewsAdapter = new NewsAdapter(getActivity(), null);
     }
 
@@ -84,20 +82,16 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
                 refresh();
             }
         });
+        if (isFirstNewsPull())
+            refresh();
+        getLoaderManager().initLoader(0, null, this);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    private boolean isFirstNewsPull() {
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
-        boolean isFirstNewsPull = prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
-        if (isFirstNewsPull)
-            refresh();
-
-        getLoaderManager().initLoader(0, null, this);
-        setHasOptionsMenu(true);
+        return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
     }
 
     @Override
@@ -105,18 +99,21 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         super.onResume();
         mListView.setAdapter(mNewsAdapter);
         mListView.setSelection(mPosition);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        EventBus.getDefault().unregister(this);
+        mSwipeRefreshLayout.setRefreshing(false);
+        mPosition = mListView.getFirstVisiblePosition();
         mListView.setAdapter(null);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mPosition = mListView.getFirstVisiblePosition();
         Icepick.saveInstanceState(this, outState);
     }
 
@@ -147,8 +144,12 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     private void refresh() {
         mSwipeRefreshLayout.setRefreshing(true);
         Intent intent = new Intent(getActivity(), NewsRefreshService.class);
-        intent.putExtra(NewsRefreshService.RECEIVER_KEY, mReceiver);
         getActivity().startService(intent);
+    }
+
+    public void onEventMainThread(NewsEvent event) {
+        getLoaderManager().restartLoader(0, null, this);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -156,31 +157,9 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         return new CursorLoader( getActivity(), NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null);
     }
 
-    @Override
-    public void onLoadFinished(Loader loader, Object data) {
+    @Override public void onLoadFinished(Loader loader, Object data) {
         mNewsAdapter.changeCursor((Cursor) data);
     }
 
-    @Override
-    public void onLoaderReset(Loader loader) {
-        mNewsAdapter.changeCursor(null);
-    }
-
-    private class NewsReceiver extends ResultReceiver {
-        private LoaderManager.LoaderCallbacks mCallback;
-
-        public NewsReceiver(Handler handler, LoaderManager.LoaderCallbacks callback) {
-            super(handler);
-            mCallback = callback;
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            super.onReceiveResult(resultCode, resultData);
-            if (isAdded()) {
-                getLoaderManager().restartLoader(0, null, mCallback);
-            }
-            mSwipeRefreshLayout.setRefreshing(false);
-        }
-    }
+    @Override public void onLoaderReset(Loader loader) { mNewsAdapter.changeCursor(null); }
 }

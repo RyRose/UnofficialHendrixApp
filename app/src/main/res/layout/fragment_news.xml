@@ -4,12 +4,9 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_news_swipe_refresh_layout"
     >
-
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_news_listView"
-        />
+        android:id="@+id/fragment_news_listView"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>

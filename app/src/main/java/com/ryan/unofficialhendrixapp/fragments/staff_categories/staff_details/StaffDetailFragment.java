@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
@@ -20,7 +21,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.InjectViews;
 
 public class StaffDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -45,7 +45,7 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     private static int COL_PERSON_PICTURE = 6;
     private static int COL_PERSON_ID = 7;
 
-    @InjectView (R.id.person_ImageView) ImageView mImageView;
+    ImageView mImageView;
     @InjectViews({R.id.person_nameView, R.id.person_titleView,
                   R.id.person_emailView,  R.id.person_phoneView,
                   R.id.person_line1View,  R.id.person_line2View})
@@ -63,8 +63,15 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_staff_person, container, false);
+        mImageView = (ImageView) inflater.inflate(R.layout.staff_header, container, false).findViewById(R.id.person_ImageView);
         ButterKnife.inject(this, rootView);
-        return rootView;
+
+        FadingActionBarHelper helper = new FadingActionBarHelper();
+        helper.headerView(mImageView);
+        helper.contentView(rootView);
+        helper.actionBarBackground(R.drawable.ab_background);
+        //helper.initActionBar(getActivity());
+        return helper.createView(getActivity()); // TODO: setup to use with actionbar
     }
 
     @Override

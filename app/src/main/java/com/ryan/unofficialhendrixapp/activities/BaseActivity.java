@@ -31,7 +31,7 @@ public abstract class BaseActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    private void setUpStaffTable() { // TODO: Have service reload the staff directory
+    private void setUpStaffTable() {
         Intent intent = new Intent(this, StaffDatabaseService.class);
         getApplicationContext().startService(intent);
     }
@@ -44,9 +44,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_about) {
+        if (item.getItemId() == R.id.action_about) {
             new MaterialDialog.Builder(this)
                     .title(R.string.about_title)
                     .content(R.string.about_content)
