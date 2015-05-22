@@ -51,7 +51,7 @@ public abstract class BaseByCategoryFragment extends ListFragment implements Loa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.restoreInstanceState(this, outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override

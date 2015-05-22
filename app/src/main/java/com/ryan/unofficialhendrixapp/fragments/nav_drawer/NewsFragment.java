@@ -25,6 +25,9 @@ import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
 import com.ryan.unofficialhendrixapp.models.NewsEvent;
 import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
@@ -82,16 +85,9 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
                 refresh();
             }
         });
-        if (isFirstNewsPull())
-            refresh();
         getLoaderManager().initLoader(0, null, this);
         setHasOptionsMenu(true);
         return rootView;
-    }
-
-    private boolean isFirstNewsPull() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
-        return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
     }
 
     @Override
@@ -100,6 +96,19 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         mListView.setAdapter(mNewsAdapter);
         mListView.setSelection(mPosition);
         EventBus.getDefault().register(this);
+
+        if (isFirstNewsPull())
+            new Timer().schedule( new TimerTask() { // Nasty hack that delays the refresh to allow the refresh to be displayed.
+                @Override                          // Possibly setup lambda expressions to make it prettier.
+                public void run() {
+                    getActivity().runOnUiThread( new Runnable() {
+                        @Override
+                        public void run() {
+                            refresh();
+                        }
+                    });
+                }
+            }, 500l);
     }
 
     @Override
@@ -139,6 +148,11 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isFirstNewsPull() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
+        return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
     }
 
     private void refresh() {

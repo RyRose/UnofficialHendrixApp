@@ -1,106 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
+          android:layout_height="fill_parent">
 
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-               android:contentDescription="@string/image_description_staff"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:id="@+id/person_ImageView"
-               android:scaleType="centerCrop"
-               android:layout_alignParentTop="true"
-               android:layout_alignParentLeft="true"
-               android:layout_alignParentStart="true"
-               android:minWidth="180dp"
-               android:minHeight="320dp"
-               android:maxHeight="320dp"
-               android:layout_margin="12dp">
-    </ImageView>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_line2View"
-        android:textSize="16sp"
-        android:text="DWREY 414"
-        android:layout_below="@+id/person_line1View"
-        android:layout_alignLeft="@+id/person_line1View"
-        android:layout_alignStart="@+id/person_line1View"/>
+        <ImageView android:contentDescription="@string/image_description_staff"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/person_ImageView"
+                   android:scaleType="centerCrop"
+                   android:layout_alignParentTop="true"
+                   android:layout_alignParentLeft="true"
+                   android:layout_alignParentStart="true"
+                   android:minWidth="180dp"
+                   android:minHeight="320dp"
+                   android:maxHeight="320dp"
+                   android:layout_margin="12dp">
+        </ImageView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_line1View"
-        android:textSize="16sp"
-        android:text="Biology Department"
-        android:layout_below="@+id/person_titleView"
-        android:layout_alignLeft="@+id/person_titleView"
-        android:layout_alignStart="@+id/person_titleView"
-        android:layout_marginLeft="6dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_line2View"
+            android:textSize="16sp"
+            android:text="DWREY 414"
+            android:layout_below="@+id/person_line1View"
+            android:layout_alignLeft="@+id/person_line1View"
+            android:layout_alignStart="@+id/person_line1View"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_nameView"
-        android:textSize="22sp"
-        android:textColor="@color/black"
-        android:text="George Harper"
-        android:layout_below="@+id/person_ImageView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="18dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_line1View"
+            android:textSize="16sp"
+            android:text="Biology Department"
+            android:layout_below="@+id/person_titleView"
+            android:layout_alignLeft="@+id/person_titleView"
+            android:layout_alignStart="@+id/person_titleView"
+            android:layout_marginLeft="6dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_titleView"
-        android:textSize="20sp"
-        android:text="N &amp; C Wood Ody Asst Prof"
-        android:layout_below="@+id/person_nameView"
-        android:layout_alignLeft="@+id/person_nameView"
-        android:layout_alignStart="@+id/person_nameView"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_nameView"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:text="George Harper"
+            android:layout_below="@+id/person_ImageView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="18dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_phoneView"
-        android:autoLink="phone"
-        android:textSize="20sp"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
-        android:text="(501) 450-1359"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_titleView"
+            android:textSize="20sp"
+            android:text="N &amp; C Wood Ody Asst Prof"
+            android:layout_below="@+id/person_nameView"
+            android:layout_alignLeft="@+id/person_nameView"
+            android:layout_alignStart="@+id/person_nameView"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/person_emailView"
-        android:autoLink="email"
-        android:textSize="20sp"
-        android:layout_below="@+id/person_line2View"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_marginTop="12dp"
-        android:text="harper@hendrix.edu"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_phoneView"
+            android:autoLink="phone"
+            android:textSize="20sp"
+            android:layout_alignTop="@+id/textView2"
+            android:layout_toRightOf="@+id/textView2"
+            android:layout_toEndOf="@+id/textView2"
+            android:text="(501) 450-1359"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/email_staff"
-        android:id="@+id/textView"
-        android:textSize="20sp"
-        android:layout_alignTop="@+id/person_emailView"
-        android:layout_alignLeft="@+id/person_titleView"
-        android:layout_alignStart="@+id/person_titleView" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/person_emailView"
+            android:autoLink="email"
+            android:textSize="20sp"
+            android:layout_below="@+id/person_line2View"
+            android:layout_toRightOf="@+id/textView"
+            android:layout_toEndOf="@+id/textView"
+            android:layout_marginTop="12dp"
+            android:text="harper@hendrix.edu"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/phone_staff"
-        android:id="@+id/textView2"
-        android:textSize="20sp"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/person_titleView" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email_staff"
+            android:id="@+id/textView"
+            android:textSize="20sp"
+            android:layout_alignTop="@+id/person_emailView"
+            android:layout_alignLeft="@+id/person_titleView"
+            android:layout_alignStart="@+id/person_titleView" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_staff"
+            android:id="@+id/textView2"
+            android:textSize="20sp"
+            android:layout_below="@+id/textView"
+            android:layout_alignLeft="@+id/person_titleView" />
+
+    </RelativeLayout>
+ </ScrollView>

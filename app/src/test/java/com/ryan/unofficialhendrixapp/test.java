@@ -1,6 +1,6 @@
 package com.ryan.unofficialhendrixapp;
 
-import com.ryan.unofficialhendrixapp.helpers.Utility;
+import com.ryan.unofficialhendrixapp.helpers.DateUtils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class test {
     public void testDateConversion() throws ParseException {
         long exampleTime = 1432174254000l;
         String exampleDate = "Thu, 21 May 2015 02:10:54 GMT";
-        assertTrue(exampleTime == Utility.convertToDate(exampleDate).getTime());
+        assertTrue(exampleTime == DateUtils.convertToDate(exampleDate).getTime());
     }
 
 }
