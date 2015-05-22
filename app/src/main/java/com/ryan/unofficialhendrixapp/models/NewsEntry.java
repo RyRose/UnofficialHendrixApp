@@ -47,4 +47,10 @@ public class NewsEntry {
     public int hashCode() {
         return title.hashCode() * link.hashCode() * description.hashCode() * date.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return LOG_TAG + "{ title:" + title + ", link:" + link +
+                ", description:" + description + ", date:" + date + "}";
+    }
 }
