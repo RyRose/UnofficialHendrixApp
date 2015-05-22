@@ -8,42 +8,39 @@ import android.support.v4.content.Loader;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
 
-public class ByDeptFragment extends BaseByCategoryFragment {
-    private final String LOG_TAG = getClass().getSimpleName();
+public class ByNameFragment extends BaseByCategoryFragment{
+    public final String LOG_TAG = getClass().getSimpleName();
 
-
-    public static final String[] DEPARTMENT_COLUMNS = {
+    public static final String[] LETTER_COLUMNS = {
             StaffColumn._ID,
-            StaffColumn.COLUMN_DEPARTMENT,
+            "substr(" + StaffColumn.COLUMN_LAST_NAME + ", 1, 1)",
     };
 
-    public static final int COL_DEPARTMENT_ID = 0;
-    public static final int COL_DEPARTMENT_DEPT = 1;
+    public static final int COLUMN_LAST_NAME = 1;
 
-    public static ByDeptFragment newInstance() {
-        ByDeptFragment fragment = new ByDeptFragment();
-        return fragment;
+    public static ByNameFragment newInstance() {
+        return new ByNameFragment();
     }
 
     @Override
     int getColumnNumber() {
-        return COL_DEPARTMENT_DEPT;
+        return COLUMN_LAST_NAME;
     }
 
     @Override
     String getStaffDetailKey() {
-        return StaffDetailActivity.DEPT_KEY;
+        return StaffDetailActivity.NAME_KEY;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(
                 getActivity(),
-                StaffColumn.CONTENT_URI_WITH_DISTINCT_DEPARTMENT,
-                DEPARTMENT_COLUMNS,
+                StaffColumn.CONTENT_URI_WITH_GROUPED_LNAME_AND_FIRST_LETTER,
+                LETTER_COLUMNS,
                 null,
                 null,
-                StaffColumn.COLUMN_DEPARTMENT + " ASC");
+                StaffColumn.COLUMN_LAST_NAME + " ASC");
 
     }
 }

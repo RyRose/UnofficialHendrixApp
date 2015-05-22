@@ -2,7 +2,8 @@ package com.ryan.unofficialhendrixapp.models;
 
 public class Staff {
     public String link;
-    public String name;
+    public String full_name;
+    public String last_name;
     public String title;
     public String dept;
     public String phone;
@@ -12,7 +13,8 @@ public class Staff {
 
     public Staff(String link, String name, String title, String dept, String phone, String email, String line1, String line2) {
         this.link = link;
-        this.name = name;
+        this.full_name = name;
+        this.last_name = name.split(" ")[ name.split(" ").length - 1 ];
         this.title = title;
         this.dept = dept.isEmpty() ? "Other" : dept;
         this.phone = phone;
@@ -23,7 +25,8 @@ public class Staff {
 
     public Staff(String[] attributes) {
         this.link = attributes[0];
-        this.name = attributes[1];
+        this.full_name = attributes[1];
+        this.last_name = attributes[1].split(" ")[ attributes[1].split(" ").length - 1 ];
         this.title = attributes[2];
         this.dept = attributes[3].isEmpty() ? "Other" : attributes[3];
         this.phone = attributes[4];

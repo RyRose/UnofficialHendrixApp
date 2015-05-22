@@ -23,14 +23,15 @@ public class HendrixDbHelper extends SQLiteOpenHelper {
                 "("  + NewsColumn._ID + " INTEGER PRIMARY KEY AUTOINCREMENT" +
                 ", " + NewsColumn.COLUMN_TITLE+ " TEXT NOT NULL" +
                 ", " + NewsColumn.COLUMN_DESCRIPTION + " TEXT NOT NULL" +
-                ", " + NewsColumn.COLUMN_DATE + " TEXT NOT NULL" +
+                ", " + NewsColumn.COLUMN_DATE + " INTEGER NOT NULL" +
                 ", " + NewsColumn.COLUMN_LINK + " TEXT NOT NULL" +
                 ")";
 
         final String CREATE_STAFF_TABLE = "CREATE TABLE " + StaffColumn.TABLE_NAME + "( " +
                 StaffColumn._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 StaffColumn.COLUMN_PICTURE + " TEXT NOT NULL, " +
-                StaffColumn.COLUMN_NAME + " TEXT NOT NULL, " +
+                StaffColumn.COLUMN_FULL_NAME + " TEXT NOT NULL, " +
+                StaffColumn.COLUMN_LAST_NAME + " TEXT NOT NULL, " +
                 StaffColumn.COLUMN_TITLE + " TEXT NOT NULL, " +
                 StaffColumn.COLUMN_DEPARTMENT + " TEXT NOT NULL, " +
                 StaffColumn.COLUMN_PHONE + " TEXT NOT NULL, " +

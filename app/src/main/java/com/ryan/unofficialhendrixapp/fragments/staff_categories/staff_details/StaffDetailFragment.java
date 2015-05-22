@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
@@ -21,12 +20,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.InjectViews;
 
 public class StaffDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String[] PERSON_COLUMNS = {
-            StaffColumn.COLUMN_NAME,
+            StaffColumn.COLUMN_FULL_NAME,
             StaffColumn.COLUMN_TITLE,
             StaffColumn.COLUMN_EMAIL,
             StaffColumn.COLUMN_PHONE,
@@ -36,7 +36,7 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
             StaffColumn._ID,
     };
 
-    private static int COL_PERSON_NAME = 0;
+    private static int COL_PERSON_FULL_NAME = 0;
     private static int COL_PERSON_TITLE = 1;
     private static int COL_PERSON_EMAIL = 2;
     private static int COL_PERSON_PHONE = 3;
@@ -45,7 +45,9 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     private static int COL_PERSON_PICTURE = 6;
     private static int COL_PERSON_ID = 7;
 
+    @InjectView(R.id.person_ImageView)
     ImageView mImageView;
+
     @InjectViews({R.id.person_nameView, R.id.person_titleView,
                   R.id.person_emailView,  R.id.person_phoneView,
                   R.id.person_line1View,  R.id.person_line2View})
@@ -63,15 +65,8 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_staff_person, container, false);
-        mImageView = (ImageView) inflater.inflate(R.layout.staff_header, container, false).findViewById(R.id.person_ImageView);
         ButterKnife.inject(this, rootView);
-
-        FadingActionBarHelper helper = new FadingActionBarHelper();
-        helper.headerView(mImageView);
-        helper.contentView(rootView);
-        helper.actionBarBackground(R.drawable.ab_background);
-        //helper.initActionBar(getActivity());
-        return helper.createView(getActivity()); // TODO: setup to use with actionbar
+        return rootView;
     }
 
     @Override
@@ -95,12 +90,11 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        getActivity().setTitle( data.getString(COL_PERSON_NAME) );
+        getActivity().setTitle( data.getString(COL_PERSON_FULL_NAME) );
 
         Picasso.with(getActivity())
                 .load(data.getString(COL_PERSON_PICTURE))
-                .fit()
-                .centerCrop()
+                // TODO: Implement .placeholder(R.drawable.progress_animation)
                 .into(mImageView, new Callback() {
                     @Override
                     public void onSuccess(){}

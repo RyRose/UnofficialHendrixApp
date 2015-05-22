@@ -3,14 +3,15 @@ apply plugin: 'com.android.application'
 buildscript {
     repositories {
         mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
     }
 
     dependencies {
-        classpath 'com.jakewharton.hugo:hugo-plugin:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
-
-apply plugin: 'hugo'
 
 android {
     compileSdkVersion 22
@@ -18,10 +19,12 @@ android {
 
     defaultConfig {
         applicationId "com.ryan.unofficialhendrixapp"
+        minSdkVersion 14
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -29,14 +32,20 @@ android {
 
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.github.frankiesardo:icepick:2.3.6'
     provided 'com.github.frankiesardo:icepick-processor:2.3.6'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.7'
-    compile 'com.joanzapata.pdfview:android-pdfview:1.0.+@aar'
+    compile 'com.joanzapata.pdfview:android-pdfview:1.0.3@aar'
     compile 'com.afollestad:material-dialogs:0.7.4.1'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    testCompile('org.robolectric:robolectric:3.0-rc2') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
 }

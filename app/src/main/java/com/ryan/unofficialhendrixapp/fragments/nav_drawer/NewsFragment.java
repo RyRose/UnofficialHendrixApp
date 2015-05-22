@@ -154,7 +154,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        return new CursorLoader( getActivity(), NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, null);
+        return new CursorLoader( getActivity(), NewsColumn.CONTENT_URI, NEWS_COLUMNS, null, null, NewsColumn.COLUMN_DATE + " DESC");
     }
 
     @Override public void onLoadFinished(Loader loader, Object data) {

@@ -18,6 +18,8 @@ import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.adapters.staff.StaffGridAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract;
+import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
+
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,13 +29,15 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
 
     public final static String[] GRID_COLUMNS = {
             HendrixContract.StaffColumn._ID,
-            HendrixContract.StaffColumn.COLUMN_NAME,
+            HendrixContract.StaffColumn.COLUMN_FULL_NAME,
+            HendrixContract.StaffColumn.COLUMN_LAST_NAME,
             HendrixContract.StaffColumn.COLUMN_PICTURE
     };
 
     public final static int COL_GRID_ID = 0;
-    public final static int COL_GRID_NAME = 1;
-    public final static int COL_GRID_PIC = 2;
+    public final static int COL_GRID_FULL_NAME = 1;
+    public final static int COL_GRID_LAST_NAME = 2;
+    public final static int COL_GRID_PIC = 3;
 
     private final static int DEPT_LOADER = 0;
     private final static int LETTER_LOADER = 1;
@@ -47,13 +51,13 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
     private OnPersonSelectedListener mCallback;
 
     public interface OnPersonSelectedListener{
-        public void onPersonSelected(long id);
+        void onPersonSelected(long id);
     }
 
     public static StaffGridFragment newInstance( String dept, String letter) {
         Bundle bundle = new Bundle();
         if (letter != null) {
-            bundle.putString(StaffDetailActivity.LETTER_KEY, letter);
+            bundle.putString(StaffDetailActivity.NAME_KEY, letter);
         } else {
             bundle.putString(StaffDetailActivity.DEPT_KEY, dept);
         }
@@ -91,7 +95,7 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
             mLetter = null;
         } else {
             mDept = null;
-            mLetter = getArguments().getString(StaffDetailActivity.LETTER_KEY);
+            mLetter = getArguments().getString(StaffDetailActivity.NAME_KEY);
         }
         getActivity().setTitle( (mDept != null) ? mDept : mLetter );
         if (mDept != null) {
@@ -119,11 +123,11 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
 
         switch( id ) {
             case DEPT_LOADER:
-                selection = HendrixContract.StaffColumn.COLUMN_DEPARTMENT + " == ?";
+                selection = StaffColumn.COLUMN_DEPARTMENT + " == ?";
                 selectionArgs = new String[]{mDept};
                 break;
             case LETTER_LOADER:
-                selection = "substr(" + HendrixContract.StaffColumn.COLUMN_NAME + ", 1, 1) == ?";
+                selection = "substr(" + StaffColumn.COLUMN_LAST_NAME +  ", 1, 1) == ?";
                 selectionArgs = new String[]{mLetter};
                 break;
             default:
@@ -132,11 +136,11 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
 
         return new CursorLoader(
                 getActivity(),
-                HendrixContract.StaffColumn.CONTENT_URI,
+                StaffColumn.CONTENT_URI,
                 GRID_COLUMNS,
                 selection,
                 selectionArgs,
-                HendrixContract.StaffColumn.COLUMN_NAME + " ASC");
+                StaffColumn.COLUMN_LAST_NAME + " ASC");
     }
 
     @Override

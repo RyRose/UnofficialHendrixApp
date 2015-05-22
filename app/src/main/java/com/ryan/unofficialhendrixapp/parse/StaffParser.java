@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.helpers;
+package com.ryan.unofficialhendrixapp.parse;
 
 
 import android.content.Context;

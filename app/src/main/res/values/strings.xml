@@ -17,7 +17,7 @@
     <string name="dialog_close">Close</string>
     <string-array name="tab_names">
         <item>By Department</item>
-        <item>By Letter</item>
+        <item>By Last Name</item>
     </string-array>
 
     <string-array name="drawer_names">

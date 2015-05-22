@@ -7,11 +7,12 @@ import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffDetailFragment;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffGridFragment;
 
+// TODO: Setup dual pane b/w department/letter and StaffDetail fragment for tablets. Put this into onPersonSelected().
 public class StaffDetailActivity extends BaseActivity implements StaffGridFragment.OnPersonSelectedListener{
     private final String LOG_TAG = getClass().getSimpleName();
 
     public static final String DEPT_KEY = "dept_key";
-    public static final String LETTER_KEY = "ltr_key";
+    public static final String NAME_KEY = "ltr_key";
     public static final String ID_KEY = "ID_key";
 
     @Override
@@ -28,8 +29,8 @@ public class StaffDetailActivity extends BaseActivity implements StaffGridFragme
 
         if (getIntent().hasExtra(DEPT_KEY)) {
             fragment = getDepartmentFragment();
-        } else if (getIntent().hasExtra(LETTER_KEY)) {
-            fragment = getGridFragment();
+        } else if (getIntent().hasExtra(NAME_KEY)) {
+            fragment = getLetterFragment();
         } else
             fragment = getStaffDetailFragment();
 
@@ -41,8 +42,8 @@ public class StaffDetailActivity extends BaseActivity implements StaffGridFragme
         return StaffGridFragment.newInstance(dept, null);
     }
 
-    private Fragment getGridFragment(){
-        String letter = getIntent().getStringExtra(LETTER_KEY);
+    private Fragment getLetterFragment(){
+        String letter = getIntent().getStringExtra(NAME_KEY);
         return StaffGridFragment.newInstance(null, letter);
     }
 

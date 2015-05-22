@@ -11,8 +11,6 @@ public class HendrixContract {
     public static final String PATH_NEWS = "news";
     public static final String PATH_STAFF = "staff";
 
-    public static final String DISTINCT = "dist";
-
     public static final class NewsColumn implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -28,14 +26,21 @@ public class HendrixContract {
 
     public static final class StaffColumn implements BaseColumns {
 
+        public static final String DISTINCT_DEPARTMENT = "dist_dept";
+        public static final String DISTINCT_GROUPED_LNAME = "group_lname";
+
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_STAFF).build();
 
-        public static final Uri CONTENT_URI_WITH_DISTINCT = CONTENT_URI.buildUpon()
-                .appendPath(DISTINCT).build();
+        public static final Uri CONTENT_URI_WITH_DISTINCT_DEPARTMENT = CONTENT_URI.buildUpon()
+                .appendPath(DISTINCT_DEPARTMENT).build();
+
+        public static final Uri CONTENT_URI_WITH_GROUPED_LNAME_AND_FIRST_LETTER = CONTENT_URI.buildUpon()
+                .appendPath(DISTINCT_GROUPED_LNAME).build();
 
         public static final String TABLE_NAME = "staff";
-        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_FULL_NAME = "f_name";
+        public static final String COLUMN_LAST_NAME = "l_name";
         public static final String COLUMN_DEPARTMENT = "department";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_PHONE = "phone";

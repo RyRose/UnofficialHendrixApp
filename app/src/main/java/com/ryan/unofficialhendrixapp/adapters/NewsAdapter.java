@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.nav_drawer.NewsFragment;
+import com.ryan.unofficialhendrixapp.helpers.DateUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,7 +40,7 @@ public class NewsAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         String titleString = cursor.getString(NewsFragment.COL_NEWS_TITLE);
-        String dateString = cursor.getString(NewsFragment.COL_NEWS_DATE);
+        String dateString = DateUtils.getPresentableDate(DateUtils.convertToDate(cursor.getLong(NewsFragment.COL_NEWS_DATE)));
 
         holder.titleView.setText(titleString);
         holder.dateView.setText(dateString);

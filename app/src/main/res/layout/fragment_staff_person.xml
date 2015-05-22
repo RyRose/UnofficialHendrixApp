@@ -1,25 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+               android:contentDescription="@string/image_description_staff"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/person_ImageView"
+               android:scaleType="centerCrop"
+               android:layout_alignParentTop="true"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               android:minWidth="180dp"
+               android:minHeight="320dp"
+               android:maxHeight="320dp"
+               android:layout_margin="12dp">
+    </ImageView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/person_line2View"
-        android:layout_below="@+id/person_line1View"
         android:textSize="16sp"
-        android:layout_marginLeft="12dp"
-        android:text="DWREY 414"/>
+        android:text="DWREY 414"
+        android:layout_below="@+id/person_line1View"
+        android:layout_alignLeft="@+id/person_line1View"
+        android:layout_alignStart="@+id/person_line1View"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/person_line1View"
-        android:layout_below="@+id/person_titleView"
         android:textSize="16sp"
-        android:layout_marginLeft="12dp"
-        android:text="Biology Department"/>
+        android:text="Biology Department"
+        android:layout_below="@+id/person_titleView"
+        android:layout_alignLeft="@+id/person_titleView"
+        android:layout_alignStart="@+id/person_titleView"
+        android:layout_marginLeft="6dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,17 +45,21 @@
         android:id="@+id/person_nameView"
         android:textSize="22sp"
         android:textColor="@color/black"
-        android:text="George Harper"/>
+        android:text="George Harper"
+        android:layout_below="@+id/person_ImageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="18dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/person_titleView"
         android:textSize="20sp"
+        android:text="N &amp; C Wood Ody Asst Prof"
         android:layout_below="@+id/person_nameView"
         android:layout_alignLeft="@+id/person_nameView"
-        android:layout_alignStart="@+id/person_nameView"
-        android:text="N &amp; C Wood Ody Asst Prof"/>
+        android:layout_alignStart="@+id/person_nameView"/>
 
     <TextView
         android:layout_width="wrap_content"

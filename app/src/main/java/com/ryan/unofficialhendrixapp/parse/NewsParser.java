@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.helpers;
+package com.ryan.unofficialhendrixapp.parse;
 
 import android.content.Context;
 import android.util.Xml;
@@ -44,7 +44,8 @@ public class NewsParser extends BaseParser {
             String name = mParser.getName();
             if (name.equals(keys[2])) {
                 String[] entry = getEntry(Arrays.copyOfRange(keys, 2, keys.length));
-                newsEntryList.add(new NewsEntry(entry));
+                NewsEntry newsEntry = new NewsEntry(entry);
+                newsEntryList.add(newsEntry);
             }
         }
 

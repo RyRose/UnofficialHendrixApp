@@ -17,7 +17,8 @@ public class HendrixProvider extends ContentProvider {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_NEWS, 1);
         sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF, 2);
-        sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF + "/" + HendrixContract.DISTINCT, 3);
+        sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF + "/" + HendrixContract.StaffColumn.DISTINCT_DEPARTMENT, 3);
+        sUriMatcher.addURI(HendrixContract.CONTENT_AUTHORITY, HendrixContract.PATH_STAFF + "/" + HendrixContract.StaffColumn.DISTINCT_GROUPED_LNAME, 4);
     }
 
     @Override
@@ -43,10 +44,14 @@ public class HendrixProvider extends ContentProvider {
                 break;
             case 2:
                 table = HendrixContract.StaffColumn.TABLE_NAME;
-                groupBy = HendrixContract.StaffColumn.COLUMN_NAME;
+                groupBy = HendrixContract.StaffColumn.COLUMN_FULL_NAME;
                 break;
             case 3:
                 groupBy = HendrixContract.StaffColumn.COLUMN_DEPARTMENT;
+                table = HendrixContract.StaffColumn.TABLE_NAME;
+                break;
+            case 4:
+                groupBy = "substr(" + HendrixContract.StaffColumn.COLUMN_LAST_NAME + ", 1, 1)";
                 table = HendrixContract.StaffColumn.TABLE_NAME;
                 break;
             default:
@@ -92,11 +97,7 @@ public class HendrixProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        String table_name;
-        if ( ( table_name = getTableName(uri) ) == null) {
-            return 0;
-        }
-        return 1;
+        return (getTableName(uri) == null) ? 0 : 1;
     }
 
     private String getTableName ( Uri uri ) {

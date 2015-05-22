@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByDeptFragment;
-import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByLetterFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_categories.ByNameFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -59,7 +59,7 @@ public class TabbedStaffFragment extends BaseNavDrawerFragment {
                 case BY_DEPT_POSITION:
                     return ByDeptFragment.newInstance();
                 case BY_LETTER_POSITION:
-                    return ByLetterFragment.newInstance();
+                    return ByNameFragment.newInstance();
                 default:
                     throw new IllegalArgumentException("Fragment not found in viewpager");
             }
