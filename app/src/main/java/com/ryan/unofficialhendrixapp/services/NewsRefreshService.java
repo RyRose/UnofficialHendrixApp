@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,8 +28,11 @@ public class NewsRefreshService extends IntentService {
     public static final String INITIAL_REFRESH_KEY = "initialNewsPull";
     private static final String LOG_TAG = "NewsRefreshService";
 
+    private Handler toastHandler;
+
     public NewsRefreshService() {
         super(LOG_TAG);
+        toastHandler = new Handler();
     }
 
     @Override
@@ -37,7 +41,14 @@ public class NewsRefreshService extends IntentService {
             fillNewsDb();
             getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE).edit().putBoolean(INITIAL_REFRESH_KEY, false).apply();
         } catch (IOException | XmlPullParserException | ParseException e) {
-            Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_SHORT).show();
+            toastHandler.post( // Allows to run on the UI thread
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_LONG).show();
+                        }
+                    } );
+            Log.e(LOG_TAG, "The hendrix feed is not available.", e);
         } finally {
             EventBus.getDefault().post(new NewsEvent());
         }
@@ -51,7 +62,7 @@ public class NewsRefreshService extends IntentService {
         c.close();
 
         for ( NewsEntry entry : newsEntryList ) {
-            if ( !databaseList.contains(entry) )
+            if ( !databaseList.contains(entry) ) // TODO: Put check in just SQL code. Use a SQL query and check moveToFirst().
                 addToDatabase(entry);
         }
     }

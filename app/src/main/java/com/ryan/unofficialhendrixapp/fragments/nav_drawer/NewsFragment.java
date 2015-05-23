@@ -137,7 +137,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_fragment_news, menu);
+        inflater.inflate(R.menu.menu_fragment_refresh, menu);
     }
 
     @Override

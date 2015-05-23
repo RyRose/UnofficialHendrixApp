@@ -37,7 +37,7 @@ public class StaffGridAdapter extends CursorAdapter {
         holder.textView.setText(cursor.getString(StaffGridFragment.COL_GRID_FULL_NAME));
 
         String picture = cursor.getString(StaffGridFragment.COL_GRID_PIC);
-        Picasso.with(context).load(picture)
+        Picasso.with(context).load(picture).placeholder(R.drawable.progress_animation)
                 .fit().centerCrop().into(holder.imageView, new Callback() {
             @Override
             public void onSuccess() {}

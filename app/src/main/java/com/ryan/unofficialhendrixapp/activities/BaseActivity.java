@@ -3,7 +3,7 @@ package com.ryan.unofficialhendrixapp.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,7 +12,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.services.StaffDatabaseService;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +26,11 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     private void setUpActionBar() {
-        getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if( getSupportActionBar() != null ) {
+            getSupportActionBar().setElevation(0);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
     }
 
     private void setUpStaffTable() {
@@ -43,7 +45,7 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) { // TODO: Create settings menu and allow changing the rss link in case Hendrix changes it.
         if (item.getItemId() == R.id.action_about) {
             new MaterialDialog.Builder(this)
                     .title(R.string.about_title)

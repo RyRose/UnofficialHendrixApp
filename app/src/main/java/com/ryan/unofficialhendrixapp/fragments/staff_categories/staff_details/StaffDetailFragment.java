@@ -94,7 +94,6 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
 
         Picasso.with(getActivity())
                 .load(data.getString(COL_PERSON_PICTURE))
-                // TODO: Implement .placeholder(R.drawable.progress_animation)
                 .into(mImageView, new Callback() {
                     @Override
                     public void onSuccess(){}
