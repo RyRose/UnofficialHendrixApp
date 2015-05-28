@@ -3,25 +3,31 @@ package com.ryan.unofficialhendrixapp.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.StaffColumn;
-import com.ryan.unofficialhendrixapp.parse.StaffParser;
 import com.ryan.unofficialhendrixapp.models.Staff;
+import com.ryan.unofficialhendrixapp.parse.StaffParser;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 public class StaffDatabaseService extends IntentService {
     private static final String LOG_TAG = "StaffDatabaseService";
     public static final String INITIAL_STAFF_FILL_KEY = "isFirstRun";
 
+    private Handler toastHandler;
+
     public StaffDatabaseService() {
         super(LOG_TAG);
+        toastHandler = new Handler();
     }
 
     @Override
@@ -31,8 +37,14 @@ public class StaffDatabaseService extends IntentService {
             addToDatabase(staffList);
             getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE).edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
             Log.d(LOG_TAG, "finished pulling staff");
+            EventBus.getDefault().post(new Staff());
         } catch (XmlPullParserException | IOException e) {
-            Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show();
+            toastHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

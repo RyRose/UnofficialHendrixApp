@@ -1,7 +1,5 @@
 package com.ryan.unofficialhendrixapp.activities;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -10,7 +8,6 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.services.StaffDatabaseService;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -18,11 +15,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpActionBar();
-
-        SharedPreferences prefs = getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE);
-        boolean isFirstPull = prefs.getBoolean(StaffDatabaseService.INITIAL_STAFF_FILL_KEY, true);
-        if ( isFirstPull )
-            setUpStaffTable();
     }
 
     private void setUpActionBar() {
@@ -33,11 +25,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpStaffTable() {
-        Intent intent = new Intent(this, StaffDatabaseService.class);
-        getApplicationContext().startService(intent);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -45,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) { // TODO: Create settings menu and allow changing the rss link in case Hendrix changes it.
+    public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_about) {
             new MaterialDialog.Builder(this)
                     .title(R.string.about_title)
@@ -56,6 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     .positiveText(R.string.dialog_close)
                     .show();
             return true;
+        } else if (item.getItemId() == R.id.action_settings) {
+            return true;  // TODO: Create settings activity and allow changing the rss link in case Hendrix changes it. Also, add the notifications setting.
         }
 
         return super.onOptionsItemSelected(item);

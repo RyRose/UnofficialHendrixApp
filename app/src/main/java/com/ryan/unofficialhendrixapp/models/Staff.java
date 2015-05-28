@@ -11,6 +11,8 @@ public class Staff {
     public String location_line_1;
     public String location_line_2;
 
+    public Staff() {} // Empty bean constructor
+
     public Staff(String link, String name, String title, String dept, String phone, String email, String line1, String line2) {
         this.link = link;
         this.full_name = name;

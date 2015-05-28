@@ -42,6 +42,12 @@
             android:exported="false">
         </service>
 
+        <receiver
+            android:name=".receivers.NewsReceiver"
+            android:exported="false">
+        </receiver>
+
+
         <provider
             android:name=".data.HendrixProvider"
             android:authorities="com.ryan.unofficialhendrixapp.provider"

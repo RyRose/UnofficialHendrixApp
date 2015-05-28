@@ -40,7 +40,7 @@ public class NewsAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         String titleString = cursor.getString(NewsFragment.COL_NEWS_TITLE);
-        String dateString = DateUtils.getPresentableDate(DateUtils.convertToDate(cursor.getLong(NewsFragment.COL_NEWS_DATE)));
+        String dateString = DateUtils.convertToString(DateUtils.convertToDate(cursor.getLong(NewsFragment.COL_NEWS_DATE)));
 
         holder.titleView.setText(titleString);
         holder.dateView.setText(dateString);

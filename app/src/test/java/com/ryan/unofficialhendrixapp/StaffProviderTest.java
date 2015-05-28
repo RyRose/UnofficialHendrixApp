@@ -1,7 +1,5 @@
 package com.ryan.unofficialhendrixapp;
 
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -14,17 +12,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowContentResolver;
 
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest="/app/src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, manifest = "app/src/main/AndroidManifest.xml")
 public class StaffProviderTest {
 
     HendrixProvider mProvider;
-    ContentResolver mContentResolver;
+    ShadowContentResolver mContentResolver;
 
     String [] NEWS_COLUMNS = { NewsColumn.COLUMN_TITLE, NewsColumn.COLUMN_LINK, NewsColumn.COLUMN_DESCRIPTION, NewsColumn.COLUMN_DATE };
 
@@ -35,9 +36,10 @@ public class StaffProviderTest {
 
     @Before
     public void setup() {
+
+        ShadowApplication app = Shadows.shadowOf(RuntimeEnvironment.application);
+        mContentResolver = Shadows.shadowOf(app.getContentResolver());
         mProvider = new HendrixProvider();
-        Activity activity = new Activity();
-        mContentResolver = activity.getContentResolver();
         mProvider.onCreate();
         ShadowContentResolver.registerProvider(HendrixContract.CONTENT_AUTHORITY, mProvider);
     }

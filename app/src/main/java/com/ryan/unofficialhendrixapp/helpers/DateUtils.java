@@ -36,7 +36,7 @@ public class DateUtils {
         return new Date(unixTime);
     }
 
-    public static String getPresentableDate(Date date) {
+    public static String convertToString(Date date) {
         return SimpleDateFormat.getDateInstance().format(date);
     }
 }

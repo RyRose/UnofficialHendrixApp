@@ -17,7 +17,6 @@ public class ByDeptFragment extends BaseByCategoryFragment {
             StaffColumn.COLUMN_DEPARTMENT,
     };
 
-    public static final int COL_DEPARTMENT_ID = 0;
     public static final int COL_DEPARTMENT_DEPT = 1;
 
     public static ByDeptFragment newInstance() {

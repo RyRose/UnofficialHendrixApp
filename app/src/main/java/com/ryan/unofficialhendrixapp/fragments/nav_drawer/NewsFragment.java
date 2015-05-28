@@ -1,5 +1,7 @@
 package com.ryan.unofficialhendrixapp.fragments.nav_drawer;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +25,7 @@ import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.adapters.NewsAdapter;
 import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
 import com.ryan.unofficialhendrixapp.models.NewsEvent;
+import com.ryan.unofficialhendrixapp.receivers.NewsReceiver;
 import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
 
 import java.util.Timer;
@@ -36,7 +39,7 @@ import icepick.Icepick;
 import icepick.Icicle;
 
 public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager.LoaderCallbacks {
-    public final String LOG_TAG = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
 
     public static final String[] NEWS_COLUMNS = {
             NewsColumn._ID,
@@ -46,19 +49,21 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
             NewsColumn.COLUMN_LINK
     };
 
-    public static final int COL_NEWS_ID = 0;
     public static final int COL_NEWS_TITLE = 1;
     public static final int COL_NEWS_DESCRIPTION = 2;
     public static final int COL_NEWS_DATE = 3;
     public static final int COL_NEWS_LINK = 4;
 
-    @InjectView(R.id.fragment_news_listView) ListView mListView;
+    @InjectView(R.id.fragment_news_listView)
+    ListView mListView;
 
-    @InjectView(R.id.fragment_news_swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @InjectView(R.id.fragment_news_swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Icicle
     int mPosition;
-    NewsAdapter mNewsAdapter;
+
+    private NewsAdapter mNewsAdapter;
 
     public static NewsFragment newInstance(int pos) {
         Bundle bundle = new Bundle();
@@ -73,6 +78,15 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
         mNewsAdapter = new NewsAdapter(getActivity(), null);
+        setUpNewsAlarm();
+    }
+
+    private void setUpNewsAlarm() {
+        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity().getApplicationContext(), NewsReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), NewsReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,  AlarmManager.INTERVAL_HALF_DAY,
+                AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
     @Override
@@ -111,6 +125,17 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
             }, 500l);
     }
 
+    private boolean isFirstNewsPull() {
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
+        return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
+    }
+
+    private void refresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        Intent intent = new Intent(getActivity(), NewsRefreshService.class);
+        getActivity().startService(intent);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -126,6 +151,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         Icepick.saveInstanceState(this, outState);
     }
 
+    @SuppressWarnings("unused")
     @OnItemClick(R.id.fragment_news_listView)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Cursor c = mNewsAdapter.getCursor();
@@ -150,17 +176,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isFirstNewsPull() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
-        return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
-    }
-
-    private void refresh() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        Intent intent = new Intent(getActivity(), NewsRefreshService.class);
-        getActivity().startService(intent);
-    }
-
+    @SuppressWarnings("unused")
     public void onEventMainThread(NewsEvent event) {
         getLoaderManager().restartLoader(0, null, this);
         mSwipeRefreshLayout.setRefreshing(false);

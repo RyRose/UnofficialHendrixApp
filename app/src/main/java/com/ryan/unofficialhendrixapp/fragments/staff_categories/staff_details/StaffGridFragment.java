@@ -34,7 +34,6 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
             HendrixContract.StaffColumn.COLUMN_PICTURE
     };
 
-    public final static int COL_GRID_ID = 0;
     public final static int COL_GRID_FULL_NAME = 1;
     public final static int COL_GRID_LAST_NAME = 2;
     public final static int COL_GRID_PIC = 3;
@@ -46,7 +45,9 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
     private String mLetter;
 
 
-    @InjectView(R.id.directory_grid) GridView mGridView;
+    @InjectView(R.id.directory_grid)
+    GridView mGridView;
+
     private StaffGridAdapter mAdapter;
     private OnPersonSelectedListener mCallback;
 
@@ -111,6 +112,7 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
         mCallback = null;
     }
 
+    @SuppressWarnings("unused")
     @OnItemClick(R.id.directory_grid)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mCallback.onPersonSelected(id);
