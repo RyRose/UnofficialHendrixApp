@@ -12,7 +12,7 @@ import java.text.ParseException;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, manifest="/app/src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, manifest="/app/src/main/AndroidManifest.xml", emulateSdk = 21)
 public class UtilityTest {
 
     @Test

@@ -21,10 +21,10 @@ public class DateUtils {
             ret =  (Date) sdf.parseObject(date);
         } catch (ParseException e) {
             try {
-                Log.e(LOG_TAG, "Date in feed is invalid. Switching to use java.util.Date.", e);
+                Log.e(LOG_TAG, "Date is invalid. Switching to use java.util.Date.", e);
                 ret =  convertToDate(Date.parse(date));
             } catch (Exception e1) {
-                Log.e(LOG_TAG, "Date in feed is very invalid. Returning today's date.", e1);
+                Log.e(LOG_TAG, "Date is very invalid. Returning today's date.", e1);
                 ret = Calendar.getInstance().getTime();
             }
         }

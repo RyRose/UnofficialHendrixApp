@@ -39,12 +39,7 @@ public class StaffDatabaseService extends IntentService {
             Log.d(LOG_TAG, "finished pulling staff");
             EventBus.getDefault().post(new Staff());
         } catch (XmlPullParserException | IOException e) {
-            toastHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show();
-                }
-            });
+            toastHandler.post(() -> Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show());
         }
     }
 

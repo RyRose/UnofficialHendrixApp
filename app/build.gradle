@@ -10,6 +10,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.1.0'
     }
 }
 
@@ -19,7 +20,6 @@ android {
 
     defaultConfig {
         applicationId "com.ryan.unofficialhendrixapp"
-        minSdkVersion 14
     }
 
     buildTypes {
@@ -27,6 +27,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -41,10 +46,8 @@ dependencies {
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.3@aar'
     compile 'com.afollestad:material-dialogs:0.7.4.1'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    testCompile('org.robolectric:robolectric:3.0-rc2') {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    testCompile('org.robolectric:robolectric:3.0-rc2')
 }
+
+apply plugin: 'me.tatarka.retrolambda'

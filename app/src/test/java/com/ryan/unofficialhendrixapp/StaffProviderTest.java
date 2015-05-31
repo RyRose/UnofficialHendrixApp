@@ -21,7 +21,7 @@ import org.robolectric.shadows.ShadowContentResolver;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, manifest = "app/src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, manifest = "app/src/main/AndroidManifest.xml", emulateSdk = 21)
 public class StaffProviderTest {
 
     HendrixProvider mProvider;
@@ -36,7 +36,6 @@ public class StaffProviderTest {
 
     @Before
     public void setup() {
-
         ShadowApplication app = Shadows.shadowOf(RuntimeEnvironment.application);
         mContentResolver = Shadows.shadowOf(app.getContentResolver());
         mProvider = new HendrixProvider();

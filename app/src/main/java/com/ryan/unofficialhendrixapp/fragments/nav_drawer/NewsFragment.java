@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -27,9 +28,6 @@ import com.ryan.unofficialhendrixapp.data.HendrixContract.NewsColumn;
 import com.ryan.unofficialhendrixapp.models.NewsEvent;
 import com.ryan.unofficialhendrixapp.receivers.NewsReceiver;
 import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -85,7 +83,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity().getApplicationContext(), NewsReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), NewsReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,  AlarmManager.INTERVAL_HALF_DAY,
+        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_DAY,
                 AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
@@ -93,12 +91,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
         ButterKnife.inject(this, rootView);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener( this::refresh );
         getLoaderManager().initLoader(0, null, this);
         setHasOptionsMenu(true);
         return rootView;
@@ -112,17 +105,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         EventBus.getDefault().register(this);
 
         if (isFirstNewsPull())
-            new Timer().schedule( new TimerTask() { // Nasty hack that delays the refresh to allow the refresh to be displayed.
-                @Override                          // Possibly setup lambda expressions to make it prettier.
-                public void run() {
-                    getActivity().runOnUiThread( new Runnable() {
-                        @Override
-                        public void run() {
-                            refresh();
-                        }
-                    });
-                }
-            }, 500l);
+            new Handler().postDelayed( this::refresh , 500l);
     }
 
     private boolean isFirstNewsPull() {
@@ -168,11 +151,11 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_refresh:
-                refresh();
-                return true;
+        if (item.getItemId() == R.id.action_refresh) {
+            refresh();
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -191,5 +174,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         mNewsAdapter.changeCursor((Cursor) data);
     }
 
-    @Override public void onLoaderReset(Loader loader) { mNewsAdapter.changeCursor(null); }
+    @Override public void onLoaderReset(Loader loader) {
+        mNewsAdapter.changeCursor(null);
+    }
 }
