@@ -3,8 +3,9 @@ package com.ryan.unofficialhendrixapp.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.ryan.unofficialhendrixapp.R;
@@ -32,14 +33,15 @@ public class StaffDatabaseService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         try {
             ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).getList();
             addToDatabase(staffList);
-            getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE).edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
-            Log.d(LOG_TAG, "finished pulling staff");
-            EventBus.getDefault().post(new Staff());
+            prefs.edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
         } catch (XmlPullParserException | IOException e) {
-            toastHandler.post(() -> Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show());
+            toastHandler.post(() -> Toast.makeText(this, getString(R.string.staff_database_error), Toast.LENGTH_LONG).show());
+        } finally {
+            EventBus.getDefault().post(new Staff());
         }
     }
 

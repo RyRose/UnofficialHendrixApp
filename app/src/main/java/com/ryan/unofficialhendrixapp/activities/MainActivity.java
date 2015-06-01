@@ -22,14 +22,19 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends BaseActivity {
-    private static final int NEWS_LOCATION = 0;
-    private static final int STAFF_DIRECTORY_LOCATION = 1;
-    private static final int CAMPUS_WEB_LOCATION = 2;
-    private static final int CAMPUS_MAP_LOCATION = 3;
 
-    @InjectView(R.id.left_drawer) ListView mDrawerView;
-    @InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    ActionBarDrawerToggle mActionBarToggle;
+    private final int NEWS_LOCATION = 0;
+    private final int STAFF_DIRECTORY_LOCATION = 1;
+    private final int CAMPUS_WEB_LOCATION = 2;
+    private final int CAMPUS_MAP_LOCATION = 3;
+
+    @InjectView(R.id.left_drawer)
+    ListView mDrawerView;
+
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
+    private ActionBarDrawerToggle mActionBarToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class MainActivity extends BaseActivity {
     private void setUpNavDrawer() {
         mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         String[] drawerItems = getResources().getStringArray(R.array.drawer_names);
-        ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.activity_main_drawer_item, R.id.drawer_item, drawerItems);
+        ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.nav_drawer_item, R.id.drawer_item, drawerItems);
         mDrawerView.setAdapter(navDrawerAdapter);
         mDrawerView.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerLayout.setDrawerListener(mActionBarToggle);

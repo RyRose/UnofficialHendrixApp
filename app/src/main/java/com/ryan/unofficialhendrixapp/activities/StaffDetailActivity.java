@@ -18,7 +18,7 @@ public class StaffDetailActivity extends BaseActivity implements StaffGridFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dir_detail);
+        setContentView(R.layout.activity_staff_detail);
 
         if ( savedInstanceState == null )
             setUpFirstFragment();

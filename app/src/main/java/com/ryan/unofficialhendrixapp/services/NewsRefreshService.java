@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -48,9 +50,10 @@ public class NewsRefreshService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         notificationList = new ArrayList<>();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         try {
             fillNewsDb();
-            getSharedPreferences( getString(R.string.prefs), MODE_PRIVATE).edit().putBoolean(INITIAL_REFRESH_KEY, false).apply();
+            prefs.edit().putBoolean(INITIAL_REFRESH_KEY, false).apply();
         } catch (IOException | XmlPullParserException | ParseException e) {
             if ( !intent.getBooleanExtra(DISPLAY_NOTIFICATION_KEY, false) )
                 toastHandler.post( () -> Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_LONG).show() );
@@ -58,7 +61,7 @@ public class NewsRefreshService extends IntentService {
             EventBus.getDefault().post(new NewsEvent());
         }
 
-        if ( intent.getBooleanExtra(DISPLAY_NOTIFICATION_KEY, false) )
+        if ( prefs.getBoolean( getString(R.string.pref_notifications), true) && intent.getBooleanExtra(DISPLAY_NOTIFICATION_KEY, false) )
             showNotifications();
     }
 

@@ -38,9 +38,12 @@
     <string name="notification_big_content_plural">New articles:</string>
     <string name="notification_summary_text_more">more</string>
 
+    <string name="pref_notifications" translatable="false">pref_notifications</string>
+    <string name="pref_notifications_title">Notifications</string>
+    <string name="pref_notifications_summary">Enable news notifications</string>
+
     <string name="rss_url" translatable="false">https://www.hendrix.edu/news/RssFeed.ashx?fol=235</string>
     <string name="campus_web_url" translatable="false">http://hendrix.edu/CampusWeb</string>
-    <string name="prefs" translatable="false">HendrixPrefsFile</string>
 
     <string-array name="rss_keys" translatable="false">
         <item>rss</item>

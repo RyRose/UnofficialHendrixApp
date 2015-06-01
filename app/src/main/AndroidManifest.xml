@@ -32,6 +32,10 @@
             android:parentActivityName=".activities.MainActivity" >
         </activity>
 
+        <activity
+            android:name=".activities.SettingsActivity" >
+        </activity>
+
         <service
             android:name=".services.NewsRefreshService"
             android:exported="false">

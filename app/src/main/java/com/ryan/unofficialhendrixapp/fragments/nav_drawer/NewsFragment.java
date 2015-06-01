@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -109,7 +110,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     }
 
     private boolean isFirstNewsPull() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Context.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         return prefs.getBoolean(NewsRefreshService.INITIAL_REFRESH_KEY, true);
     }
 

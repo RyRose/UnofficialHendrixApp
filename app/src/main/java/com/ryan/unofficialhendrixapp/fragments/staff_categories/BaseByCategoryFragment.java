@@ -1,17 +1,16 @@
 package com.ryan.unofficialhendrixapp.fragments.staff_categories;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 
-import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.adapters.staff.StaffCategoryAdapter;
 import com.ryan.unofficialhendrixapp.models.Staff;
@@ -37,7 +36,7 @@ public abstract class BaseByCategoryFragment extends ListFragment implements Loa
     }
 
     private void setUpStaffTable() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs), Activity.MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean isFirstPull = prefs.getBoolean(StaffDatabaseService.INITIAL_STAFF_FILL_KEY, true);
         if ( isFirstPull ) // TODO: Setup listview to show loading symbol when pulling staff.
             createStaffTable();
