@@ -14,14 +14,6 @@ import butterknife.InjectView;
 
 public class MapFragment extends BaseNavDrawerFragment {
 
-    public static MapFragment newInstance(int position) {
-        Bundle args = new Bundle();
-        args.putInt( NAV_DRAWER_KEY, position);
-        MapFragment fragment = new MapFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @InjectView(R.id.fragment_map_pdfview) PDFView mapView;
 
     @Override

@@ -64,14 +64,6 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     private NewsAdapter mNewsAdapter;
 
-    public static NewsFragment newInstance(int pos) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(NAV_DRAWER_KEY, pos);
-        NewsFragment fragment = new NewsFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

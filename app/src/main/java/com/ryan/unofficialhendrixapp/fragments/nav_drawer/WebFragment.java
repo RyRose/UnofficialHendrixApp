@@ -21,17 +21,11 @@ import butterknife.InjectView;
 
 public class WebFragment extends BaseNavDrawerFragment {
 
-    @InjectView(R.id.fragment_web_webview) WebView mWebView;
+    @InjectView(R.id.fragment_web_webview)
+    WebView mWebView;
+
     @InjectView(R.id.fragment_web_swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-
-    public static WebFragment newInstance(int pos) {
-        WebFragment fragment = new WebFragment();
-        Bundle args = new Bundle();
-        args.putInt(NAV_DRAWER_KEY, pos);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,12 +39,7 @@ public class WebFragment extends BaseNavDrawerFragment {
         View rootView = inflater.inflate(R.layout.fragment_web, container, false);
         ButterKnife.inject(this, rootView);
         setUpWebView(savedInstanceState);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener( this::refresh );
         return rootView;
     }
 
@@ -71,19 +60,18 @@ public class WebFragment extends BaseNavDrawerFragment {
             }
         });
 
-        if (savedInstanceState != null) {
-            mWebView.restoreState(savedInstanceState);
-        } else {
+        if (savedInstanceState == null) {
             mWebView.loadUrl(getString(R.string.campus_web_url));
+        } else {
+            mWebView.restoreState(savedInstanceState);
         }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
             refresh();
-        }
     }
 
     private void refresh() {

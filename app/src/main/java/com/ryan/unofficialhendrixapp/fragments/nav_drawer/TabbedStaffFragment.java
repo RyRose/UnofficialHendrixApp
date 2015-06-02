@@ -25,15 +25,6 @@ public class TabbedStaffFragment extends BaseNavDrawerFragment {
     @InjectView(R.id.staff_pager) ViewPager mViewPager;
     @InjectView(R.id.staff_tabs) PagerSlidingTabStrip tabs;
 
-
-    public static TabbedStaffFragment newInstance(int pos) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(NAV_DRAWER_KEY, pos);
-        TabbedStaffFragment fragment = new TabbedStaffFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_staff_tabbed, container, false);

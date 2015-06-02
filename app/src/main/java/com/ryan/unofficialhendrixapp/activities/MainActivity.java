@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
     private void setUpDefaultFragment() {
         mDrawerView.setItemChecked(NEWS_LOCATION, true);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_main_container, NewsFragment.newInstance(NEWS_LOCATION))
+                .replace(R.id.fragment_main_container, BaseNavDrawerFragment.newInstance( new NewsFragment(), NEWS_LOCATION))
                 .commit();
     }
 
@@ -100,16 +100,16 @@ public class MainActivity extends BaseActivity {
             Fragment fragment;
             switch ( position ) {
                 case NEWS_LOCATION:
-                    fragment = NewsFragment.newInstance(position);
+                    fragment = BaseNavDrawerFragment.newInstance( new NewsFragment(), position);
                     break;
                 case STAFF_DIRECTORY_LOCATION:
-                    fragment = TabbedStaffFragment.newInstance(position);
+                    fragment = BaseNavDrawerFragment.newInstance( new TabbedStaffFragment(), position);
                     break;
                 case CAMPUS_WEB_LOCATION:
-                    fragment = WebFragment.newInstance(position);
+                    fragment = BaseNavDrawerFragment.newInstance( new WebFragment(), position);
                     break;
                 case CAMPUS_MAP_LOCATION:
-                    fragment = MapFragment.newInstance(position);
+                    fragment = BaseNavDrawerFragment.newInstance( new MapFragment(), position);
                     break;
                 default:
                     throw new IllegalArgumentException("Option not accounted for in Nav Drawer");
