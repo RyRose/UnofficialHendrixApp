@@ -7,7 +7,6 @@ import com.ryan.unofficialhendrixapp.R;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffDetailFragment;
 import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffGridFragment;
 
-// TODO: Setup dual pane b/w department/letter and StaffDetail fragment for tablets. Put this into onPersonSelected().
 public class StaffDetailActivity extends BaseActivity implements StaffGridFragment.OnPersonSelectedListener{
     private final String LOG_TAG = getClass().getSimpleName();
 

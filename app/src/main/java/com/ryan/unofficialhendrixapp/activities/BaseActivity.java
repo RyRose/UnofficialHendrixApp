@@ -36,7 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                new MaterialDialog.Builder(this) // TODO: Move into SettingsFragment
+                new MaterialDialog.Builder(this)
                         .title(R.string.about_title)
                         .content(R.string.about_content)
                         .theme(Theme.LIGHT)

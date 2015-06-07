@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.ryan.unofficialhendrixapp.services.NewsRefreshService;
 
 public class NewsReceiver extends BroadcastReceiver {
-    public final String LOG_TAG = getClass().getSimpleName();
+    private final String LOG_TAG = getClass().getSimpleName();
 
     public static final int REQUEST_CODE = 0xDEADBEEF; // Can be anything. I just like this hex code.
 

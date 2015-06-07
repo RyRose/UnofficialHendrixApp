@@ -38,7 +38,7 @@ public abstract class BaseByCategoryFragment extends ListFragment implements Loa
     private void setUpStaffTable() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean isFirstPull = prefs.getBoolean(StaffDatabaseService.INITIAL_STAFF_FILL_KEY, true);
-        if ( isFirstPull ) // TODO: Setup listview to show loading symbol when pulling staff.
+        if ( isFirstPull )
             createStaffTable();
     }
 

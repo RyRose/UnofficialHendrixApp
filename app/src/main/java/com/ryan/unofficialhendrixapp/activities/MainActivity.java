@@ -21,6 +21,10 @@ import com.ryan.unofficialhendrixapp.fragments.nav_drawer.WebFragment;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+// Tablet support
+// TODO: Setup  navigation drawer as always open for tablet landscape
+// TODO: Setup dual pane b/w department/letter and StaffDetail fragment for tablet landscape. Put this into onPersonSelected().
+
 public class MainActivity extends BaseActivity {
 
     private final int NEWS_LOCATION = 0;
