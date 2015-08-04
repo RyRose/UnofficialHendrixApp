@@ -18,7 +18,7 @@ public class MapFragment extends BaseNavDrawerFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        View rootView = inflater.inflate(R.layout.fragments_navdrawer_mapfragment, container, false);
         ButterKnife.inject(this, rootView);
         mapView.fromAsset("campus_map.pdf").pages(0).defaultPage(0).enableSwipe(false).load();
         return rootView;

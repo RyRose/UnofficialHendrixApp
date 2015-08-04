@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activities_mainactivity);
         ButterKnife.inject(this);
         setUpNavDrawer();
 
@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity {
     private void setUpNavDrawer() {
         mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close);
         String[] drawerItems = getResources().getStringArray(R.array.drawer_names);
-        ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.nav_drawer_item, R.id.drawer_item, drawerItems);
+        ArrayAdapter navDrawerAdapter = new ArrayAdapter<>(this, R.layout.mainactivity_nav_item, R.id.drawer_item, drawerItems);
         mDrawerView.setAdapter(navDrawerAdapter);
         mDrawerView.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerLayout.setDrawerListener(mActionBarToggle);

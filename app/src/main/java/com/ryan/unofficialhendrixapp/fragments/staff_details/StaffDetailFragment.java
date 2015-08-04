@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details;
+package com.ryan.unofficialhendrixapp.fragments.staff_details;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -64,7 +64,7 @@ public class StaffDetailFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_staff_person, container, false);
+        View rootView = inflater.inflate(R.layout.fragments_staffdetails_staffdetailfragment, container, false);
         ButterKnife.inject(this, rootView);
         return rootView;
     }

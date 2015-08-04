@@ -82,7 +82,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_news, container, false);
+        View rootView = inflater.inflate(R.layout.fragments_navdrawer_newsfragment, container, false);
         ButterKnife.inject(this, rootView);
         mSwipeRefreshLayout.setOnRefreshListener( this::refresh );
         getLoaderManager().initLoader(0, null, this);

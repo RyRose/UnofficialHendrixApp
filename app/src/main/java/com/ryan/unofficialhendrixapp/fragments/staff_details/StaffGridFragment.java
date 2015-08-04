@@ -1,4 +1,4 @@
-package com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details;
+package com.ryan.unofficialhendrixapp.fragments.staff_details;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -82,7 +82,7 @@ public class StaffGridFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_staff_grid, container, false);
+        View rootView = inflater.inflate(R.layout.fragments_staffdetails_staffgridfragment, container, false);
         ButterKnife.inject(this, rootView);
         mGridView.setAdapter(mAdapter);
         return rootView;

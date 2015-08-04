@@ -106,3 +106,5 @@ gradle-app.setting
 hs_err_pid*
 
 .gitignore.backup
+staff_directory.xml
+staff.xml

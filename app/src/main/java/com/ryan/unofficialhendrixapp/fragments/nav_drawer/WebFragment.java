@@ -36,7 +36,7 @@ public class WebFragment extends BaseNavDrawerFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_web, container, false);
+        View rootView = inflater.inflate(R.layout.fragments_navdrawer_webfragment, container, false);
         ButterKnife.inject(this, rootView);
         setUpWebView(savedInstanceState);
         mSwipeRefreshLayout.setOnRefreshListener( this::refresh );

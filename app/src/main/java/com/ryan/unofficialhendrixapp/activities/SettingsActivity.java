@@ -12,7 +12,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTitle(R.string.action_settings);
         setUpActionBar();
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activities_settingsactivity);
     }
 
     private void setUpActionBar() {

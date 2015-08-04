@@ -23,6 +23,7 @@ import de.greenrobot.event.EventBus;
 public class StaffDatabaseService extends IntentService {
     private static final String LOG_TAG = "StaffDatabaseService";
     public static final String INITIAL_STAFF_FILL_KEY = "isFirstRun";
+    public static final String DONE_STAFF_FILL_KEY = "isDone";
 
     private Handler toastHandler;
 
@@ -35,11 +36,13 @@ public class StaffDatabaseService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         try {
+            prefs.edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
             ArrayList<Staff> staffList = new StaffParser(getApplicationContext()).getList();
             addToDatabase(staffList);
-            prefs.edit().putBoolean(INITIAL_STAFF_FILL_KEY, false).apply();
+            prefs.edit().putBoolean(DONE_STAFF_FILL_KEY, true).apply();
         } catch (XmlPullParserException | IOException e) {
             toastHandler.post(() -> Toast.makeText(this, getString(R.string.staff_database_error), Toast.LENGTH_LONG).show());
+            prefs.edit().putBoolean(INITIAL_STAFF_FILL_KEY, true).apply();
         } finally {
             EventBus.getDefault().post(new Staff());
         }

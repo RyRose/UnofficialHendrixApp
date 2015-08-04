@@ -27,7 +27,7 @@ public class NewsAdapter extends CursorAdapter {
         View view;
         int layoutId;
 
-        layoutId = R.layout.fragment_news_list_item;
+        layoutId = R.layout.newsfragment_list_item;
         view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         holder = new ViewHolder(view);
 

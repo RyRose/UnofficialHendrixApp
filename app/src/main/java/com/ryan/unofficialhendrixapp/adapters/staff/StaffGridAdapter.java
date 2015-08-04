@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ryan.unofficialhendrixapp.R;
-import com.ryan.unofficialhendrixapp.fragments.staff_categories.staff_details.StaffGridFragment;
+import com.ryan.unofficialhendrixapp.fragments.staff_details.StaffGridFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +25,7 @@ public class StaffGridAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.fragment_staff_grid_item, parent, false);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.staffgridfragment_grid_item, parent, false);
         ViewHolder holder = new ViewHolder(rootView);
         rootView.setTag(holder);
         return rootView;
