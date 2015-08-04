@@ -1,6 +1,7 @@
 package com.ryan.unofficialhendrixapp.models;
 
 public class Staff {
+
     public String link;
     public String full_name;
     public String last_name;

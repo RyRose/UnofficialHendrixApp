@@ -16,7 +16,7 @@
     <string name="staff_search_hint">Search staff and faculty members</string>
     <string name="staff_database_error">Can\'t access staff directory</string>
 
-    <string name="news_refresh_error">News not available</string>
+    <string name="news_refresh_error">Recent news not available</string>
     <string name="about_title">About this app</string>
     <string name="about_content">This app is entirely unofficial and was developed by a Hendrix student!\n\nIf you wish to contribute, check out https://github.com/RyRose/UnofficialHendrixApp.\n\nPlease contact the developer through Google Play or GitHub if you have any questions and/or suggestions.</string>
     <string name="dialog_close">Close</string>
