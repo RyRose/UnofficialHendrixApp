@@ -37,6 +37,8 @@ gen-external-apklibs
 *.iml
 
 ## Directory-based project format:
+.idea/*
+/.idea/*
 .idea/
 # if you remove the above rule, at least ignore the following:
 
@@ -106,5 +108,3 @@ gradle-app.setting
 hs_err_pid*
 
 .gitignore.backup
-staff_directory.xml
-staff.xml
