@@ -34,8 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import de.greenrobot.event.EventBus;
-import icepick.Icepick;
-import icepick.Icicle;
 
 public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager.LoaderCallbacks {
     private final String LOG_TAG = getClass().getSimpleName();
@@ -59,15 +57,19 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @InjectView(R.id.fragment_news_swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Icicle
-    int mPosition;
+    private String mPosition_key = "position";
+    private int mPosition = 0;
 
     private NewsAdapter mNewsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(mPosition_key);
+        }
+
         mNewsAdapter = new NewsAdapter(getActivity(), null);
         setUpNewsAlarm();
     }
@@ -84,7 +86,12 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragments_navdrawer_newsfragment, container, false);
         ButterKnife.inject(this, rootView);
-        mSwipeRefreshLayout.setOnRefreshListener( this::refresh );
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
         getLoaderManager().initLoader(0, null, this);
         setHasOptionsMenu(true);
         return rootView;
@@ -98,7 +105,12 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
         EventBus.getDefault().register(this);
 
         if (isFirstNewsPull())
-            new Handler().postDelayed( this::refresh , 500l);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
+                }
+            }, 500l);
     }
 
     private boolean isFirstNewsPull() {
@@ -124,7 +136,7 @@ public class NewsFragment extends BaseNavDrawerFragment implements LoaderManager
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        outState.putInt(mPosition_key, mPosition);
     }
 
     @SuppressWarnings("unused")

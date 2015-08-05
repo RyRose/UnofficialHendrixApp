@@ -39,13 +39,19 @@ public class WebFragment extends BaseNavDrawerFragment {
         View rootView = inflater.inflate(R.layout.fragments_navdrawer_webfragment, container, false);
         ButterKnife.inject(this, rootView);
         setUpWebView(savedInstanceState);
-        mSwipeRefreshLayout.setOnRefreshListener( this::refresh );
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
         return rootView;
     }
 
     private void setUpWebView(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT <= 18)
             mWebView.getSettings().setSavePassword(false);
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSupportZoom(true);

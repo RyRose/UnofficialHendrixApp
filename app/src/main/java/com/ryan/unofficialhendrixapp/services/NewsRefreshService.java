@@ -56,7 +56,12 @@ public class NewsRefreshService extends IntentService {
             prefs.edit().putBoolean(INITIAL_REFRESH_KEY, false).apply();
         } catch (IOException | XmlPullParserException | ParseException e) {
             if ( !intent.getBooleanExtra(DISPLAY_NOTIFICATION_KEY, false) )
-                toastHandler.post( () -> Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_LONG).show() );
+                toastHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getString(R.string.news_refresh_error), Toast.LENGTH_LONG).show();
+                    }
+                });
         } finally {
             EventBus.getDefault().post(new NewsEvent());
         }

@@ -12,12 +12,10 @@ import android.widget.ListView;
 import com.ryan.unofficialhendrixapp.activities.StaffDetailActivity;
 import com.ryan.unofficialhendrixapp.adapters.staff.StaffCategoryAdapter;
 
-import icepick.Icepick;
-import icepick.Icicle;
-
 public abstract class BaseByCategoryFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
-    
-    @Icicle int mPosition = 0;
+
+    private String mPosition_key = "position";
+    private int mPosition = 0;
 
     abstract int getColumnNumber();
     abstract String getStaffDetailKey();
@@ -25,8 +23,12 @@ public abstract class BaseByCategoryFragment extends ListFragment implements Loa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
         setListAdapter(new StaffCategoryAdapter(getActivity(), getColumnNumber()));
+
+
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(mPosition_key);
+        }
     }
 
     @Override
@@ -50,7 +52,7 @@ public abstract class BaseByCategoryFragment extends ListFragment implements Loa
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+        outState.putInt(mPosition_key, mPosition);
     }
 
     @Override

@@ -41,7 +41,12 @@ public class StaffDatabaseService extends IntentService {
             addToDatabase(staffList);
             prefs.edit().putBoolean(DONE_STAFF_FILL_KEY, true).apply();
         } catch (XmlPullParserException | IOException e) {
-            toastHandler.post(() -> Toast.makeText(this, getString(R.string.staff_database_error), Toast.LENGTH_LONG).show());
+            toastHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getString(R.string.staff_database_error), Toast.LENGTH_LONG).show();
+                }
+            });
             prefs.edit().putBoolean(INITIAL_STAFF_FILL_KEY, true).apply();
         } finally {
             EventBus.getDefault().post(new Staff());
