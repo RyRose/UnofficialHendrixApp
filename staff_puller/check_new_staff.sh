@@ -1,8 +1,10 @@
 #!/bin/bash
-diff_staff=$(diff /var/www/html/staff.xml out/staff.xml);
-version=$(cat /var/www/html/staff_version.txt);
+xml_location="/var/www/html/app/staff.xml"
+txt_location="/var/www/html/app/staff_version.txt"
+diff_staff=$(diff $xml_location out/staff.xml);
+version=$(cat $txt_location);
 if [ -n "$diff_staff" ]; then
-    echo $(($version + 1)) > /var/www/html/staff_version.txt
-    cp /var/www/html/staff.xml out/staff"$version".xml
-    cp out/staff.xml /var/www/html/staff.xml;
+    echo $(($version + 1)) > $txt_location
+    cp $xml_location out/staff"$version".xml
+    cp out/staff.xml $xml_location;
 fi
