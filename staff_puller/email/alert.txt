@@ -1,5 +1,0 @@
-To: RosadeApps@gmail.com
-From: TheHendrixNewsAndInfoParser@gmail.com
-Subject: Staff Database Pull Failed!
-
-Log
